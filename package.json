@@ -3,8 +3,10 @@
   "title": "TaxJs",
   "version": "2023.2.1",
   "description": "german tax calculation in typescript and javascript",
-  "main": "./dist/js/Lohnsteuer2023AbJuli.min.js",
-  "types": "./dist/declaration/Lohnsteuer2023AbJuli.d.ts",
+  "exports": {
+    "default": "./dist/esnext/Lohnsteuer2023AbJuli.js"
+  },
+  "types": "./dist/esnext/Lohnsteuer2023AbJuli.d.ts",
   "type": "module",
   "scripts": {
     "clean": "node build/clean.js",
@@ -13,7 +15,7 @@
     "build:commonjs": "tsc --target ES5 --module commonjs --outDir dist/commonjs",
     "build:amd": "tsc --target ES5 --module amd --outDir dist/amd",
     "build:es2021": "tsc --target ES2021 --module ES2020 --outDir dist/es2021",
-    "build:esnext": "tsc --target esnext --module esnext --outDir dist/esnext",
+    "build:esnext": "tsc --target esnext --module esnext --declaration true --outDir dist/esnext",
     "build:system": "tsc --target ES5 --module System --outDir dist/system",
     "build:umd": "tsc --target ES5 --module UMD --outDir dist/umd",
     "build:es2015": "tsc --target ES2015 --module ES2015 --outDir dist/es2015",
