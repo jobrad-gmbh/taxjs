@@ -38,7 +38,7 @@ export class Lohnsteuer2024Big {
              2 = Beitragsabschläge für das 2. und 3. Kind
              3 = Beitragsabschläge für 2. bis 4. Kinder
              4 = Beitragsabschläge für 2. bis 5. oder mehr Kinder    */
-        this.PVA = new Big(0);
+        this.PVA = this.Z_0;
         /**  1, wenn bei der sozialen Pflegeversicherung die Besonderheiten in Sachsen zu berücksichtigen sind bzw.
                 zu berücksichtigen wären, sonst 0.  */
         this.PVS = 0;
