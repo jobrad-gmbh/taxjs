@@ -5,7 +5,7 @@ import Big from 'big.js';
 * Generiert aus Pseudocode von: <a href="https://www.bmf-steuerrechner.de">bmf-steuerrechner</a>
 *
 */
-export class Lohnsteuer2025 {
+export class Lohnsteuer2025Big {
     constructor() {
         this.Z_0 = new Big(0);
         this.Z_1 = new Big(1);
@@ -1913,7 +1913,7 @@ export class Lohnsteuer2025 {
      * Get all fields with types.
      */
     getDirectory() {
-        return Lohnsteuer2025.typeDirectory;
+        return Lohnsteuer2025Big.typeDirectory;
     }
     /**
      * Converts a value (number or Big) in the correct type (number or Big).
@@ -1922,7 +1922,7 @@ export class Lohnsteuer2025 {
      * @param {TaxJsValueType} value the value to convert
      */
     toType(name, value) {
-        const info = Lohnsteuer2025.typeDirectory[name];
+        const info = Lohnsteuer2025Big.typeDirectory[name];
         if (!info) {
             throw new Error("Unknown parameter " + name);
         }
@@ -1935,13 +1935,13 @@ export class Lohnsteuer2025 {
         return value;
     }
 }
-Lohnsteuer2025._n = "number";
-Lohnsteuer2025._b = "Big";
-Lohnsteuer2025._i = "input";
-Lohnsteuer2025._o = "output";
-Lohnsteuer2025._s = "STANDARD";
-Lohnsteuer2025._d = "DBA";
-Lohnsteuer2025.typeDirectory = {
-    "af": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "AJAHR": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "ALTER1": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "f": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "JFREIB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JHINZU": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JRE4": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JRE4ENT": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JVBEZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "KRV": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "KVZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "LZZ": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "LZZFREIB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "LZZHINZU": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "MBV": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PKPV": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PKV": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "PVA": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PVS": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "PVZ": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "R": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "RE4": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "SONSTB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "SONSTENT": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "STERBE": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "STKL": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "VBEZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBEZM": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBEZS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VJAHR": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "ZKF": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "ZMVB": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "BK": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "BKS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "LSTLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "SOLZLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "SOLZS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "STS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VKVLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VKVSONST": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VFRB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "VFRBS1": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "VFRBS2": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRBO": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRBM": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d },
+Lohnsteuer2025Big._n = "number";
+Lohnsteuer2025Big._b = "Big";
+Lohnsteuer2025Big._i = "input";
+Lohnsteuer2025Big._o = "output";
+Lohnsteuer2025Big._s = "STANDARD";
+Lohnsteuer2025Big._d = "DBA";
+Lohnsteuer2025Big.typeDirectory = {
+    "af": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "AJAHR": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "ALTER1": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "f": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "JFREIB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JHINZU": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JRE4": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JRE4ENT": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JVBEZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "KRV": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "KVZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "LZZ": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "LZZFREIB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "LZZHINZU": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "MBV": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PKPV": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PKV": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "PVA": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PVS": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "PVZ": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "R": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "RE4": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "SONSTB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "SONSTENT": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "STERBE": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "STKL": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "VBEZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBEZM": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBEZS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VJAHR": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "ZKF": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "ZMVB": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "BK": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "BKS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "LSTLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "SOLZLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "SOLZS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "STS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VKVLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VKVSONST": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VFRB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "VFRBS1": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "VFRBS2": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRBO": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRBM": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d },
 };
 //# sourceMappingURL=Lohnsteuer2025Big.js.map

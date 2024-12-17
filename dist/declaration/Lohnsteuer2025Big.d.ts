@@ -1,15 +1,15 @@
 import Big from 'big.js';
 import { TaxJs, TaxJsValueType, TaxJsDictionary } from '../../TaxJs';
-type Lohnsteuer2025InBigType = "JFREIB" | "JHINZU" | "JRE4" | "JRE4ENT" | "JVBEZ" | "KVZ" | "LZZFREIB" | "LZZHINZU" | "MBV" | "PKPV" | "PVA" | "RE4" | "SONSTB" | "SONSTENT" | "STERBE" | "VBEZ" | "VBEZM" | "VBEZS" | "VBS" | "ZKF";
-type Lohnsteuer2025InNumberType = "af" | "AJAHR" | "ALTER1" | "f" | "KRV" | "LZZ" | "PKV" | "PVS" | "PVZ" | "R" | "STKL" | "VJAHR" | "ZMVB";
-type Lohnsteuer2025OutType = "BK" | "BKS" | "LSTLZZ" | "SOLZLZZ" | "SOLZS" | "STS" | "VKVLZZ" | "VKVSONST" | "VFRB" | "VFRBS1" | "VFRBS2" | "WVFRB" | "WVFRBO" | "WVFRBM";
+type Lohnsteuer2025BigInBigType = "JFREIB" | "JHINZU" | "JRE4" | "JRE4ENT" | "JVBEZ" | "KVZ" | "LZZFREIB" | "LZZHINZU" | "MBV" | "PKPV" | "PVA" | "RE4" | "SONSTB" | "SONSTENT" | "STERBE" | "VBEZ" | "VBEZM" | "VBEZS" | "VBS" | "ZKF";
+type Lohnsteuer2025BigInNumberType = "af" | "AJAHR" | "ALTER1" | "f" | "KRV" | "LZZ" | "PKV" | "PVS" | "PVZ" | "R" | "STKL" | "VJAHR" | "ZMVB";
+type Lohnsteuer2025BigOutType = "BK" | "BKS" | "LSTLZZ" | "SOLZLZZ" | "SOLZS" | "STS" | "VKVLZZ" | "VKVSONST" | "VFRB" | "VFRBS1" | "VFRBS2" | "WVFRB" | "WVFRBO" | "WVFRBM";
 /**
 * Steuerberechnungsklasse.
 *
 * Generiert aus Pseudocode von: <a href="https://www.bmf-steuerrechner.de">bmf-steuerrechner</a>
 *
 */
-export declare class Lohnsteuer2025 implements TaxJs<Lohnsteuer2025InBigType, Lohnsteuer2025InNumberType, Lohnsteuer2025OutType> {
+export declare class Lohnsteuer2025Big implements TaxJs<Lohnsteuer2025BigInBigType, Lohnsteuer2025BigInNumberType, Lohnsteuer2025BigOutType> {
     private static readonly _n;
     private static readonly _b;
     private static readonly _i;
@@ -1271,13 +1271,13 @@ export declare class Lohnsteuer2025 implements TaxJs<Lohnsteuer2025InBigType, Lo
      * @param {string} name Variable name to set.
      * @param {number} value Value to set.
      */
-    set(name: Lohnsteuer2025InBigType | Lohnsteuer2025InNumberType, value: TaxJsValueType): void;
+    set(name: Lohnsteuer2025BigInBigType | Lohnsteuer2025BigInNumberType, value: TaxJsValueType): void;
     /**
      * Getter for all output parameters. You get a value of type "number or "Big".
      *
      * @param {string} name Variable name to get.
      */
-    get(name: Lohnsteuer2025InBigType | Lohnsteuer2025InNumberType | Lohnsteuer2025OutType): TaxJsValueType;
+    get(name: Lohnsteuer2025BigInBigType | Lohnsteuer2025BigInNumberType | Lohnsteuer2025BigOutType): TaxJsValueType;
     private static readonly typeDirectory;
     /**
      * Get all fields with types.
