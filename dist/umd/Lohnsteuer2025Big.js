@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.Lohnsteuer2025 = void 0;
+    exports.Lohnsteuer2025Big = void 0;
     var big_js_1 = __importDefault(require("big.js"));
     /**
     * Steuerberechnungsklasse.
@@ -20,8 +20,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     * Generiert aus Pseudocode von: <a href="https://www.bmf-steuerrechner.de">bmf-steuerrechner</a>
     *
     */
-    var Lohnsteuer2025 = /** @class */ (function () {
-        function Lohnsteuer2025() {
+    var Lohnsteuer2025Big = /** @class */ (function () {
+        function Lohnsteuer2025Big() {
             this.Z_0 = new big_js_1.default(0);
             this.Z_1 = new big_js_1.default(1);
             this.Z_10 = new big_js_1.default(10);
@@ -317,7 +317,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.ZAHL10000 = new big_js_1.default(10000);
         }
         /**   PROGRAMMABLAUFPLAN, PAP Seite 13   */
-        Lohnsteuer2025.prototype.calculate = function () {
+        Lohnsteuer2025Big.prototype.calculate = function () {
             this.MPARA();
             this.MRE4JL();
             this.VBEZBSO = this.Z_0;
@@ -327,7 +327,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.MSONST();
         };
         /**   Zuweisung von Werten für bestimmte Sozialversicherungsparameter  PAP Seite 14   */
-        Lohnsteuer2025.prototype.MPARA = function () {
+        Lohnsteuer2025Big.prototype.MPARA = function () {
             if (this.KRV < 1) {
                 /**   &lt; = <   */
                 this.BBGRV = new big_js_1.default(96600);
@@ -370,7 +370,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             /**   geändert für 2025   */
         };
         /**   Ermittlung des Jahresarbeitslohns nach § 39 b Abs. 2 Satz 2 EStG, PAP Seite 15   */
-        Lohnsteuer2025.prototype.MRE4JL = function () {
+        Lohnsteuer2025Big.prototype.MRE4JL = function () {
             if (this.LZZ == 1) {
                 this.ZRE4J = this.RE4.div(this.ZAHL100).round(2, big_js_1.default.roundDown);
                 this.ZVBEZJ = this.VBEZ.div(this.ZAHL100).round(2, big_js_1.default.roundDown);
@@ -404,7 +404,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Freibeträge für Versorgungsbezüge, Altersentlastungsbetrag (§ 39b Abs. 2 Satz 3 EStG), PAP Seite 16   */
-        Lohnsteuer2025.prototype.MRE4 = function () {
+        Lohnsteuer2025Big.prototype.MRE4 = function () {
             if (this.ZVBEZJ.cmp(this.Z_0) == 0) {
                 this.FVBZ = this.Z_0;
                 this.FVB = this.Z_0;
@@ -463,7 +463,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.MRE4ALTE();
         };
         /**   Altersentlastungsbetrag (§ 39b Abs. 2 Satz 3 EStG), PAP Seite 17   */
-        Lohnsteuer2025.prototype.MRE4ALTE = function () {
+        Lohnsteuer2025Big.prototype.MRE4ALTE = function () {
             if (this.ALTER1 == 0) {
                 this.ALTE = this.Z_0;
             }
@@ -491,7 +491,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Ermittlung des Jahresarbeitslohns nach Abzug der Freibeträge nach § 39 b Abs. 2 Satz 3 und 4 EStG, PAP Seite 20   */
-        Lohnsteuer2025.prototype.MRE4ABZ = function () {
+        Lohnsteuer2025Big.prototype.MRE4ABZ = function () {
             this.ZRE4 = (this.ZRE4J.sub(this.FVB).sub(this.ALTE).sub(this.JLFREIB).add(this.JLHINZU)).round(2, big_js_1.default.roundDown);
             if (this.ZRE4.cmp(this.Z_0) == -1) {
                 this.ZRE4 = this.Z_0;
@@ -503,7 +503,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Berechnung fuer laufende Lohnzahlungszeitraueme Seite 21  */
-        Lohnsteuer2025.prototype.MBERECH = function () {
+        Lohnsteuer2025Big.prototype.MBERECH = function () {
             this.MZTABFB();
             this.VFRB = ((this.ANP.add(this.FVB.add(this.FVBZ))).mul(this.ZAHL100)).round(0, big_js_1.default.roundDown);
             this.MLSTJAHR();
@@ -528,7 +528,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.MSOLZ();
         };
         /**   Ermittlung der festen Tabellenfreibeträge (ohne Vorsorgepauschale), PAP Seite 22   */
-        Lohnsteuer2025.prototype.MZTABFB = function () {
+        Lohnsteuer2025Big.prototype.MZTABFB = function () {
             this.ANP = this.Z_0;
             if (this.ZVBEZ.cmp(this.Z_0) >= 0 && this.ZVBEZ.cmp(this.FVBZ) == -1) {
                 this.FVBZ = new big_js_1.default(this.ZVBEZ.toNumber());
@@ -598,21 +598,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.ZTABFB = (this.EFA.add(this.ANP).add(this.SAP).add(this.FVBZ)).round(2, big_js_1.default.roundDown);
         };
         /**   Ermittlung Jahreslohnsteuer, PAP Seite 23   */
-        Lohnsteuer2025.prototype.MLSTJAHR = function () {
+        Lohnsteuer2025Big.prototype.MLSTJAHR = function () {
             this.UPEVP();
             this.ZVE = this.ZRE4.sub(this.ZTABFB).sub(this.VSP);
             /**   geändert für 2025   */
             this.UPMLST();
         };
         /**   PAP Seite 24   */
-        Lohnsteuer2025.prototype.UPVKVLZZ = function () {
+        Lohnsteuer2025Big.prototype.UPVKVLZZ = function () {
             this.UPVKV();
             this.JW = this.VKV;
             this.UPANTEIL();
             this.VKVLZZ = this.ANTEIL1;
         };
         /**   PAP Seite 24   */
-        Lohnsteuer2025.prototype.UPVKV = function () {
+        Lohnsteuer2025Big.prototype.UPVKV = function () {
             if (this.PKV > 0) {
                 if (this.VSP2.cmp(this.VSP3) == 1) {
                     this.VKV = this.VSP2.mul(this.ZAHL100);
@@ -626,13 +626,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   PAP Seite 25   */
-        Lohnsteuer2025.prototype.UPLSTLZZ = function () {
+        Lohnsteuer2025Big.prototype.UPLSTLZZ = function () {
             this.JW = this.LSTJAHR.mul(this.ZAHL100);
             this.UPANTEIL();
             this.LSTLZZ = this.ANTEIL1;
         };
         /**   Ermittlung der Jahreslohnsteuer aus dem Einkommensteuertarif. PAP Seite 26   */
-        Lohnsteuer2025.prototype.UPMLST = function () {
+        Lohnsteuer2025Big.prototype.UPMLST = function () {
             if (this.ZVE.cmp(this.ZAHL1) == -1) {
                 this.ZVE = this.Z_0;
                 this.X = this.Z_0;
@@ -649,7 +649,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   	Vorsorgepauschale (§ 39b Absatz 2 Satz 5 Nummer 3 und Absatz 4 EStG) PAP Seite 27    */
-        Lohnsteuer2025.prototype.UPEVP = function () {
+        Lohnsteuer2025Big.prototype.UPEVP = function () {
             if (this.KRV == 1) {
                 this.VSP1 = this.Z_0;
             }
@@ -676,7 +676,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Vorsorgepauschale (§39b Abs. 2 Satz 5 Nr 3 EStG) Vergleichsberechnung fuer Guenstigerpruefung, PAP Seite 28   */
-        Lohnsteuer2025.prototype.MVSP = function () {
+        Lohnsteuer2025Big.prototype.MVSP = function () {
             if (this.ZRE4VP.cmp(this.BBGKVPV) == 1) {
                 this.ZRE4VP = this.BBGKVPV;
             }
@@ -697,7 +697,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.VSP = this.VSP3.add(this.VSP1).round(0, big_js_1.default.roundUp);
         };
         /**   Lohnsteuer fuer die Steuerklassen V und VI (§ 39b Abs. 2 Satz 7 EStG), PAP Seite 29   */
-        Lohnsteuer2025.prototype.MST5_6 = function () {
+        Lohnsteuer2025Big.prototype.MST5_6 = function () {
             this.ZZX = this.X;
             if (this.ZZX.cmp(this.W2STKL5) == 1) {
                 this.ZX = this.W2STKL5;
@@ -728,7 +728,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Unterprogramm zur Lohnsteuer fuer die Steuerklassen V und VI (§ 39b Abs. 2 Satz 7 EStG), PAP Seite 30   */
-        Lohnsteuer2025.prototype.UP5_6 = function () {
+        Lohnsteuer2025Big.prototype.UP5_6 = function () {
             this.X = (this.ZX.mul(new big_js_1.default(1.25))).round(2, big_js_1.default.roundDown);
             this.UPTAB25();
             /**   geändert für 2025   */
@@ -747,7 +747,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Solidaritaetszuschlag, PAP Seite 31   */
-        Lohnsteuer2025.prototype.MSOLZ = function () {
+        Lohnsteuer2025Big.prototype.MSOLZ = function () {
             this.SOLZFREI = (this.SOLZFREI.mul(new big_js_1.default(this.KZTAB)));
             if (this.JBMG.cmp(this.SOLZFREI) == 1) {
                 this.SOLZJ = (this.JBMG.mul(new big_js_1.default(5.5))).div(this.ZAHL100).round(2, big_js_1.default.roundDown);
@@ -772,7 +772,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Anteil von Jahresbetraegen fuer einen LZZ (§ 39b Abs. 2 Satz 9 EStG), PAP Seite 32   */
-        Lohnsteuer2025.prototype.UPANTEIL = function () {
+        Lohnsteuer2025Big.prototype.UPANTEIL = function () {
             if (this.LZZ == 1) {
                 this.ANTEIL1 = this.JW;
             }
@@ -791,7 +791,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Berechnung sonstiger Bezuege nach § 39b Abs. 3 Saetze 1 bis 8 EStG), PAP Seite 33   */
-        Lohnsteuer2025.prototype.MSONST = function () {
+        Lohnsteuer2025Big.prototype.MSONST = function () {
             this.LZZ = 1;
             if (this.ZMVB == 0) {
                 this.ZMVB = 12;
@@ -828,7 +828,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   PAP Seite 34   */
-        Lohnsteuer2025.prototype.STSMIN = function () {
+        Lohnsteuer2025Big.prototype.STSMIN = function () {
             if (this.STS.cmp(this.Z_0) == -1) {
                 /**   STS < 0   */
                 if (this.MBV.cmp(this.Z_0) == 0) {
@@ -866,7 +866,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Berechnung des SolZ auf sonstige Bezüge, PAP Seite 35   */
-        Lohnsteuer2025.prototype.MSOLZSTS = function () {
+        Lohnsteuer2025Big.prototype.MSOLZSTS = function () {
             if (this.ZKF.cmp(this.Z_0) == 1) {
                 /**   ZKF > 0   */
                 this.SOLZSZVE = this.ZVE.sub(this.KFB);
@@ -900,7 +900,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
         };
         /**   Sonderberechnung ohne sonstige Bezüge für Berechnung bei sonstigen Bezügen oder Vergütung für mehrjährige Tätigkeit, PAP Seite 36   */
-        Lohnsteuer2025.prototype.MOSONST = function () {
+        Lohnsteuer2025Big.prototype.MOSONST = function () {
             this.ZRE4J = (this.JRE4.div(this.ZAHL100)).round(2, big_js_1.default.roundDown);
             this.ZVBEZJ = (this.JVBEZ.div(this.ZAHL100)).round(2, big_js_1.default.roundDown);
             this.JLFREIB = this.JFREIB.div(this.ZAHL100).round(2, big_js_1.default.roundDown);
@@ -918,7 +918,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.LSTOSO = this.ST.mul(this.ZAHL100);
         };
         /**   Sonderberechnung mit sonstige Bezüge für Berechnung bei sonstigen Bezügen oder Vergütung für mehrjährige Tätigkeit, PAP Seite 37   */
-        Lohnsteuer2025.prototype.MRE4SONST = function () {
+        Lohnsteuer2025Big.prototype.MRE4SONST = function () {
             this.MRE4();
             this.FVB = this.FVBSO;
             this.MRE4ABZ();
@@ -929,7 +929,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.VFRBS2 = ((((this.ANP.add(this.FVB).add(this.FVBZ))).mul(this.ZAHL100))).sub(this.VFRBS1);
         };
         /**   Tarifliche Einkommensteuer §32a EStG, PAP Seite 38   */
-        Lohnsteuer2025.prototype.UPTAB25 = function () {
+        Lohnsteuer2025Big.prototype.UPTAB25 = function () {
             /**   geändert für 2025   */
             if (this.X.cmp(this.GFB.add(this.ZAHL1)) == -1) {
                 this.ST = this.Z_0;
@@ -976,7 +976,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getAf = function () {
+        Lohnsteuer2025Big.prototype.getAf = function () {
             return this.af;
         };
         /**
@@ -986,7 +986,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} af input value
          */
-        Lohnsteuer2025.prototype.setAf = function (af) {
+        Lohnsteuer2025Big.prototype.setAf = function (af) {
             this.af = af;
         };
         /**
@@ -997,7 +997,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getAJAHR = function () {
+        Lohnsteuer2025Big.prototype.getAJAHR = function () {
             return this.AJAHR;
         };
         /**
@@ -1008,7 +1008,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} AJAHR input value
          */
-        Lohnsteuer2025.prototype.setAJAHR = function (AJAHR) {
+        Lohnsteuer2025Big.prototype.setAJAHR = function (AJAHR) {
             this.AJAHR = AJAHR;
         };
         /**
@@ -1019,7 +1019,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getALTER1 = function () {
+        Lohnsteuer2025Big.prototype.getALTER1 = function () {
             return this.ALTER1;
         };
         /**
@@ -1030,7 +1030,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} ALTER1 input value
          */
-        Lohnsteuer2025.prototype.setALTER1 = function (ALTER1) {
+        Lohnsteuer2025Big.prototype.setALTER1 = function (ALTER1) {
             this.ALTER1 = ALTER1;
         };
         /**
@@ -1040,7 +1040,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getF = function () {
+        Lohnsteuer2025Big.prototype.getF = function () {
             return this.f;
         };
         /**
@@ -1050,7 +1050,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} f input value
          */
-        Lohnsteuer2025.prototype.setF = function (f) {
+        Lohnsteuer2025Big.prototype.setF = function (f) {
             this.f = f;
         };
         /**
@@ -1063,7 +1063,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getJFREIB = function () {
+        Lohnsteuer2025Big.prototype.getJFREIB = function () {
             return this.JFREIB;
         };
         /**
@@ -1076,7 +1076,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} JFREIB input value
          */
-        Lohnsteuer2025.prototype.setJFREIB = function (JFREIB) {
+        Lohnsteuer2025Big.prototype.setJFREIB = function (JFREIB) {
             this.JFREIB = JFREIB;
         };
         /**
@@ -1089,7 +1089,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getJHINZU = function () {
+        Lohnsteuer2025Big.prototype.getJHINZU = function () {
             return this.JHINZU;
         };
         /**
@@ -1102,7 +1102,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} JHINZU input value
          */
-        Lohnsteuer2025.prototype.setJHINZU = function (JHINZU) {
+        Lohnsteuer2025Big.prototype.setJHINZU = function (JHINZU) {
             this.JHINZU = JHINZU;
         };
         /**
@@ -1119,7 +1119,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getJRE4 = function () {
+        Lohnsteuer2025Big.prototype.getJRE4 = function () {
             return this.JRE4;
         };
         /**
@@ -1136,7 +1136,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} JRE4 input value
          */
-        Lohnsteuer2025.prototype.setJRE4 = function (JRE4) {
+        Lohnsteuer2025Big.prototype.setJRE4 = function (JRE4) {
             this.JRE4 = JRE4;
         };
         /**
@@ -1147,7 +1147,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getJRE4ENT = function () {
+        Lohnsteuer2025Big.prototype.getJRE4ENT = function () {
             return this.JRE4ENT;
         };
         /**
@@ -1158,7 +1158,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} JRE4ENT input value
          */
-        Lohnsteuer2025.prototype.setJRE4ENT = function (JRE4ENT) {
+        Lohnsteuer2025Big.prototype.setJRE4ENT = function (JRE4ENT) {
             this.JRE4ENT = JRE4ENT;
         };
         /**
@@ -1168,7 +1168,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getJVBEZ = function () {
+        Lohnsteuer2025Big.prototype.getJVBEZ = function () {
             return this.JVBEZ;
         };
         /**
@@ -1178,7 +1178,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} JVBEZ input value
          */
-        Lohnsteuer2025.prototype.setJVBEZ = function (JVBEZ) {
+        Lohnsteuer2025Big.prototype.setJVBEZ = function (JVBEZ) {
             this.JVBEZ = JVBEZ;
         };
         /**
@@ -1194,7 +1194,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getKRV = function () {
+        Lohnsteuer2025Big.prototype.getKRV = function () {
             return this.KRV;
         };
         /**
@@ -1210,7 +1210,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} KRV input value
          */
-        Lohnsteuer2025.prototype.setKRV = function (KRV) {
+        Lohnsteuer2025Big.prototype.setKRV = function (KRV) {
             this.KRV = KRV;
         };
         /**
@@ -1223,7 +1223,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getKVZ = function () {
+        Lohnsteuer2025Big.prototype.getKVZ = function () {
             return this.KVZ;
         };
         /**
@@ -1236,7 +1236,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} KVZ input value
          */
-        Lohnsteuer2025.prototype.setKVZ = function (KVZ) {
+        Lohnsteuer2025Big.prototype.setKVZ = function (KVZ) {
             this.KVZ = KVZ;
         };
         /**
@@ -1250,7 +1250,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getLZZ = function () {
+        Lohnsteuer2025Big.prototype.getLZZ = function () {
             return this.LZZ;
         };
         /**
@@ -1264,7 +1264,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} LZZ input value
          */
-        Lohnsteuer2025.prototype.setLZZ = function (LZZ) {
+        Lohnsteuer2025Big.prototype.setLZZ = function (LZZ) {
             this.LZZ = LZZ;
         };
         /**
@@ -1276,7 +1276,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getLZZFREIB = function () {
+        Lohnsteuer2025Big.prototype.getLZZFREIB = function () {
             return this.LZZFREIB;
         };
         /**
@@ -1288,7 +1288,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} LZZFREIB input value
          */
-        Lohnsteuer2025.prototype.setLZZFREIB = function (LZZFREIB) {
+        Lohnsteuer2025Big.prototype.setLZZFREIB = function (LZZFREIB) {
             this.LZZFREIB = LZZFREIB;
         };
         /**
@@ -1300,7 +1300,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getLZZHINZU = function () {
+        Lohnsteuer2025Big.prototype.getLZZHINZU = function () {
             return this.LZZHINZU;
         };
         /**
@@ -1312,7 +1312,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} LZZHINZU input value
          */
-        Lohnsteuer2025.prototype.setLZZHINZU = function (LZZHINZU) {
+        Lohnsteuer2025Big.prototype.setLZZHINZU = function (LZZHINZU) {
             this.LZZHINZU = LZZHINZU;
         };
         /**
@@ -1323,7 +1323,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getMBV = function () {
+        Lohnsteuer2025Big.prototype.getMBV = function () {
             return this.MBV;
         };
         /**
@@ -1334,7 +1334,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} MBV input value
          */
-        Lohnsteuer2025.prototype.setMBV = function (MBV) {
+        Lohnsteuer2025Big.prototype.setMBV = function (MBV) {
             this.MBV = MBV;
         };
         /**
@@ -1347,7 +1347,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getPKPV = function () {
+        Lohnsteuer2025Big.prototype.getPKPV = function () {
             return this.PKPV;
         };
         /**
@@ -1360,7 +1360,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} PKPV input value
          */
-        Lohnsteuer2025.prototype.setPKPV = function (PKPV) {
+        Lohnsteuer2025Big.prototype.setPKPV = function (PKPV) {
             this.PKPV = PKPV;
         };
         /**
@@ -1373,7 +1373,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getPKV = function () {
+        Lohnsteuer2025Big.prototype.getPKV = function () {
             return this.PKV;
         };
         /**
@@ -1386,7 +1386,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} PKV input value
          */
-        Lohnsteuer2025.prototype.setPKV = function (PKV) {
+        Lohnsteuer2025Big.prototype.setPKV = function (PKV) {
             this.PKV = PKV;
         };
         /**
@@ -1402,7 +1402,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getPVA = function () {
+        Lohnsteuer2025Big.prototype.getPVA = function () {
             return this.PVA;
         };
         /**
@@ -1418,7 +1418,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} PVA input value
          */
-        Lohnsteuer2025.prototype.setPVA = function (PVA) {
+        Lohnsteuer2025Big.prototype.setPVA = function (PVA) {
             this.PVA = PVA;
         };
         /**
@@ -1429,7 +1429,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getPVS = function () {
+        Lohnsteuer2025Big.prototype.getPVS = function () {
             return this.PVS;
         };
         /**
@@ -1440,7 +1440,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} PVS input value
          */
-        Lohnsteuer2025.prototype.setPVS = function (PVS) {
+        Lohnsteuer2025Big.prototype.setPVS = function (PVS) {
             this.PVS = PVS;
         };
         /**
@@ -1451,7 +1451,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getPVZ = function () {
+        Lohnsteuer2025Big.prototype.getPVZ = function () {
             return this.PVZ;
         };
         /**
@@ -1462,7 +1462,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} PVZ input value
          */
-        Lohnsteuer2025.prototype.setPVZ = function (PVZ) {
+        Lohnsteuer2025Big.prototype.setPVZ = function (PVZ) {
             this.PVZ = PVZ;
         };
         /**
@@ -1473,7 +1473,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getR = function () {
+        Lohnsteuer2025Big.prototype.getR = function () {
             return this.R;
         };
         /**
@@ -1484,7 +1484,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} R input value
          */
-        Lohnsteuer2025.prototype.setR = function (R) {
+        Lohnsteuer2025Big.prototype.setR = function (R) {
             this.R = R;
         };
         /**
@@ -1498,7 +1498,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getRE4 = function () {
+        Lohnsteuer2025Big.prototype.getRE4 = function () {
             return this.RE4;
         };
         /**
@@ -1512,7 +1512,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} RE4 input value
          */
-        Lohnsteuer2025.prototype.setRE4 = function (RE4) {
+        Lohnsteuer2025Big.prototype.setRE4 = function (RE4) {
             this.RE4 = RE4;
         };
         /**
@@ -1523,7 +1523,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getSONSTB = function () {
+        Lohnsteuer2025Big.prototype.getSONSTB = function () {
             return this.SONSTB;
         };
         /**
@@ -1534,7 +1534,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} SONSTB input value
          */
-        Lohnsteuer2025.prototype.setSONSTB = function (SONSTB) {
+        Lohnsteuer2025Big.prototype.setSONSTB = function (SONSTB) {
             this.SONSTB = SONSTB;
         };
         /**
@@ -1544,7 +1544,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getSONSTENT = function () {
+        Lohnsteuer2025Big.prototype.getSONSTENT = function () {
             return this.SONSTENT;
         };
         /**
@@ -1554,7 +1554,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} SONSTENT input value
          */
-        Lohnsteuer2025.prototype.setSONSTENT = function (SONSTENT) {
+        Lohnsteuer2025Big.prototype.setSONSTENT = function (SONSTENT) {
             this.SONSTENT = SONSTENT;
         };
         /**
@@ -1565,7 +1565,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getSTERBE = function () {
+        Lohnsteuer2025Big.prototype.getSTERBE = function () {
             return this.STERBE;
         };
         /**
@@ -1576,7 +1576,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} STERBE input value
          */
-        Lohnsteuer2025.prototype.setSTERBE = function (STERBE) {
+        Lohnsteuer2025Big.prototype.setSTERBE = function (STERBE) {
             this.STERBE = STERBE;
         };
         /**
@@ -1592,7 +1592,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getSTKL = function () {
+        Lohnsteuer2025Big.prototype.getSTKL = function () {
             return this.STKL;
         };
         /**
@@ -1608,7 +1608,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} STKL input value
          */
-        Lohnsteuer2025.prototype.setSTKL = function (STKL) {
+        Lohnsteuer2025Big.prototype.setSTKL = function (STKL) {
             this.STKL = STKL;
         };
         /**
@@ -1618,7 +1618,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVBEZ = function () {
+        Lohnsteuer2025Big.prototype.getVBEZ = function () {
             return this.VBEZ;
         };
         /**
@@ -1628,7 +1628,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} VBEZ input value
          */
-        Lohnsteuer2025.prototype.setVBEZ = function (VBEZ) {
+        Lohnsteuer2025Big.prototype.setVBEZ = function (VBEZ) {
             this.VBEZ = VBEZ;
         };
         /**
@@ -1639,7 +1639,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVBEZM = function () {
+        Lohnsteuer2025Big.prototype.getVBEZM = function () {
             return this.VBEZM;
         };
         /**
@@ -1650,7 +1650,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} VBEZM input value
          */
-        Lohnsteuer2025.prototype.setVBEZM = function (VBEZM) {
+        Lohnsteuer2025Big.prototype.setVBEZM = function (VBEZM) {
             this.VBEZM = VBEZM;
         };
         /**
@@ -1662,7 +1662,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVBEZS = function () {
+        Lohnsteuer2025Big.prototype.getVBEZS = function () {
             return this.VBEZS;
         };
         /**
@@ -1674,7 +1674,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} VBEZS input value
          */
-        Lohnsteuer2025.prototype.setVBEZS = function (VBEZS) {
+        Lohnsteuer2025Big.prototype.setVBEZS = function (VBEZS) {
             this.VBEZS = VBEZS;
         };
         /**
@@ -1685,7 +1685,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVBS = function () {
+        Lohnsteuer2025Big.prototype.getVBS = function () {
             return this.VBS;
         };
         /**
@@ -1696,7 +1696,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} VBS input value
          */
-        Lohnsteuer2025.prototype.setVBS = function (VBS) {
+        Lohnsteuer2025Big.prototype.setVBS = function (VBS) {
             this.VBS = VBS;
         };
         /**
@@ -1707,7 +1707,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVJAHR = function () {
+        Lohnsteuer2025Big.prototype.getVJAHR = function () {
             return this.VJAHR;
         };
         /**
@@ -1718,7 +1718,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} VJAHR input value
          */
-        Lohnsteuer2025.prototype.setVJAHR = function (VJAHR) {
+        Lohnsteuer2025Big.prototype.setVJAHR = function (VJAHR) {
             this.VJAHR = VJAHR;
         };
         /**
@@ -1729,7 +1729,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getZKF = function () {
+        Lohnsteuer2025Big.prototype.getZKF = function () {
             return this.ZKF;
         };
         /**
@@ -1740,7 +1740,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {Big} ZKF input value
          */
-        Lohnsteuer2025.prototype.setZKF = function (ZKF) {
+        Lohnsteuer2025Big.prototype.setZKF = function (ZKF) {
             this.ZKF = ZKF;
         };
         /**
@@ -1751,7 +1751,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getZMVB = function () {
+        Lohnsteuer2025Big.prototype.getZMVB = function () {
             return this.ZMVB;
         };
         /**
@@ -1762,7 +1762,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @param {number} ZMVB input value
          */
-        Lohnsteuer2025.prototype.setZMVB = function (ZMVB) {
+        Lohnsteuer2025Big.prototype.setZMVB = function (ZMVB) {
             this.ZMVB = ZMVB;
         };
         /**
@@ -1772,7 +1772,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getBK = function () {
+        Lohnsteuer2025Big.prototype.getBK = function () {
             return this.BK;
         };
         /**
@@ -1786,7 +1786,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getBKS = function () {
+        Lohnsteuer2025Big.prototype.getBKS = function () {
             return this.BKS;
         };
         /**
@@ -1796,7 +1796,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getLSTLZZ = function () {
+        Lohnsteuer2025Big.prototype.getLSTLZZ = function () {
             return this.LSTLZZ;
         };
         /**
@@ -1807,7 +1807,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getSOLZLZZ = function () {
+        Lohnsteuer2025Big.prototype.getSOLZLZZ = function () {
             return this.SOLZLZZ;
         };
         /**
@@ -1821,7 +1821,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getSOLZS = function () {
+        Lohnsteuer2025Big.prototype.getSOLZS = function () {
             return this.SOLZS;
         };
         /**
@@ -1835,7 +1835,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getSTS = function () {
+        Lohnsteuer2025Big.prototype.getSTS = function () {
             return this.STS;
         };
         /**
@@ -1850,7 +1850,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVKVLZZ = function () {
+        Lohnsteuer2025Big.prototype.getVKVLZZ = function () {
             return this.VKVLZZ;
         };
         /**
@@ -1863,7 +1863,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVKVSONST = function () {
+        Lohnsteuer2025Big.prototype.getVKVSONST = function () {
             return this.VKVSONST;
         };
         /**
@@ -1873,7 +1873,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVFRB = function () {
+        Lohnsteuer2025Big.prototype.getVFRB = function () {
             return this.VFRB;
         };
         /**
@@ -1883,7 +1883,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVFRBS1 = function () {
+        Lohnsteuer2025Big.prototype.getVFRBS1 = function () {
             return this.VFRBS1;
         };
         /**
@@ -1893,7 +1893,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getVFRBS2 = function () {
+        Lohnsteuer2025Big.prototype.getVFRBS2 = function () {
             return this.VFRBS2;
         };
         /**
@@ -1904,7 +1904,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getWVFRB = function () {
+        Lohnsteuer2025Big.prototype.getWVFRB = function () {
             return this.WVFRB;
         };
         /**
@@ -1915,7 +1915,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getWVFRBO = function () {
+        Lohnsteuer2025Big.prototype.getWVFRBO = function () {
             return this.WVFRBO;
         };
         /**
@@ -1926,18 +1926,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * <p>
          * @return the value
          */
-        Lohnsteuer2025.prototype.getWVFRBM = function () {
+        Lohnsteuer2025Big.prototype.getWVFRBM = function () {
             return this.WVFRBM;
         };
         /**
          * Initialize all inputs values with zero.
          */
-        Lohnsteuer2025.prototype.initInputs = function () {
+        Lohnsteuer2025Big.prototype.initInputs = function () {
             this.JFREIB = this.JHINZU = this.JRE4 = this.JRE4ENT = this.JVBEZ = this.KVZ = this.LZZFREIB = this.LZZHINZU = this.MBV = this.PKPV = this.PVA = this.RE4 = this.SONSTB = this.SONSTENT = this.STERBE = this.VBEZ = this.VBEZM = this.VBEZS = this.VBS = this.ZKF = this.Z_0;
             this.af = this.AJAHR = this.ALTER1 = this.f = this.KRV = this.LZZ = this.PKV = this.PVS = this.PVZ = this.R = this.STKL = this.VJAHR = this.ZMVB = 0;
         };
         // not realy clean, but for ts compiler
-        Lohnsteuer2025.prototype.isBigInput = function (name, value) {
+        Lohnsteuer2025Big.prototype.isBigInput = function (name, value) {
             return value instanceof big_js_1.default;
         };
         /**
@@ -1946,7 +1946,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * @param {string} name Variable name to set.
          * @param {number} value Value to set.
          */
-        Lohnsteuer2025.prototype.set = function (name, value) {
+        Lohnsteuer2025Big.prototype.set = function (name, value) {
             if (!this.hasOwnProperty(name)) {
                 throw new Error("Unknown parameter " + name);
             }
@@ -1964,7 +1964,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          *
          * @param {string} name Variable name to get.
          */
-        Lohnsteuer2025.prototype.get = function (name) {
+        Lohnsteuer2025Big.prototype.get = function (name) {
             if (this.hasOwnProperty(name)) {
                 return this[name];
             }
@@ -1973,8 +1973,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         /**
          * Get all fields with types.
          */
-        Lohnsteuer2025.prototype.getDirectory = function () {
-            return Lohnsteuer2025.typeDirectory;
+        Lohnsteuer2025Big.prototype.getDirectory = function () {
+            return Lohnsteuer2025Big.typeDirectory;
         };
         /**
          * Converts a value (number or Big) in the correct type (number or Big).
@@ -1982,8 +1982,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
          * @param {string} name the name of the value
          * @param {TaxJsValueType} value the value to convert
          */
-        Lohnsteuer2025.prototype.toType = function (name, value) {
-            var info = Lohnsteuer2025.typeDirectory[name];
+        Lohnsteuer2025Big.prototype.toType = function (name, value) {
+            var info = Lohnsteuer2025Big.typeDirectory[name];
             if (!info) {
                 throw new Error("Unknown parameter " + name);
             }
@@ -1995,17 +1995,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             }
             return value;
         };
-        Lohnsteuer2025._n = "number";
-        Lohnsteuer2025._b = "Big";
-        Lohnsteuer2025._i = "input";
-        Lohnsteuer2025._o = "output";
-        Lohnsteuer2025._s = "STANDARD";
-        Lohnsteuer2025._d = "DBA";
-        Lohnsteuer2025.typeDirectory = {
-            "af": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "AJAHR": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "ALTER1": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "f": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "JFREIB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JHINZU": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JRE4": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JRE4ENT": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JVBEZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "KRV": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "KVZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "LZZ": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "LZZFREIB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "LZZHINZU": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "MBV": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PKPV": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PKV": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "PVA": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PVS": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "PVZ": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "R": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "RE4": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "SONSTB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "SONSTENT": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "STERBE": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "STKL": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "VBEZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBEZM": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBEZS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VJAHR": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "ZKF": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "ZMVB": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "BK": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "BKS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "LSTLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "SOLZLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "SOLZS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "STS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VKVLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VKVSONST": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VFRB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "VFRBS1": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "VFRBS2": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRBO": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRBM": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d },
+        Lohnsteuer2025Big._n = "number";
+        Lohnsteuer2025Big._b = "Big";
+        Lohnsteuer2025Big._i = "input";
+        Lohnsteuer2025Big._o = "output";
+        Lohnsteuer2025Big._s = "STANDARD";
+        Lohnsteuer2025Big._d = "DBA";
+        Lohnsteuer2025Big.typeDirectory = {
+            "af": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "AJAHR": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "ALTER1": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "f": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "JFREIB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JHINZU": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JRE4": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JRE4ENT": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JVBEZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "KRV": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "KVZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "LZZ": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "LZZFREIB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "LZZHINZU": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "MBV": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PKPV": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PKV": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "PVA": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PVS": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "PVZ": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "R": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "RE4": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "SONSTB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "SONSTENT": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "STERBE": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "STKL": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "VBEZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBEZM": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBEZS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VJAHR": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "ZKF": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "ZMVB": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "BK": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "BKS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "LSTLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "SOLZLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "SOLZS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "STS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VKVLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VKVSONST": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VFRB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "VFRBS1": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "VFRBS2": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRBO": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRBM": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d },
         };
-        return Lohnsteuer2025;
+        return Lohnsteuer2025Big;
     }());
-    exports.Lohnsteuer2025 = Lohnsteuer2025;
+    exports.Lohnsteuer2025Big = Lohnsteuer2025Big;
 });
 //# sourceMappingURL=Lohnsteuer2025Big.js.map
