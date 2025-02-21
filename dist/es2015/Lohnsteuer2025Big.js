@@ -5,290 +5,290 @@ import Big from 'big.js';
 * Generiert aus Pseudocode von: <a href="https://www.bmf-steuerrechner.de">bmf-steuerrechner</a>
 *
 */
-export class Lohnsteuer2025Big {
+export class Lohnsteuer2025 {
     constructor() {
         this.Z_0 = new Big(0);
         this.Z_1 = new Big(1);
         this.Z_10 = new Big(10);
-        /**  Stand: 2024-11-18 14:40 */
-        /**  ITZBund Berlin  */
-        /**   EINGABEPARAMETER   */
-        /**  1, wenn die Anwendung des Faktorverfahrens gewählt wurden (nur in Steuerklasse IV)  */
+        /**   Stand: 2025-01-07 10:15  */
+        /**   ITZBund Berlin   */
+        /**    EINGABEPARAMETER    */
+        /**   1, wenn die Anwendung des Faktorverfahrens gewählt wurden (nur in Steuerklasse IV)   */
         this.af = 1;
-        /**  eingetragener Faktor mit drei Nachkommastellen  */
+        /**   eingetragener Faktor mit drei Nachkommastellen   */
         this.f = 1.0;
-        /**  In JRE4 enthaltene Entschädigungen nach § 24 Nummer 1 EStG und zu besteuernde
-             Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG in Cent  */
+        /**   In JRE4 enthaltene Entschädigungen nach § 24 Nummer 1 EStG und zu besteuernde
+                         Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG in Cent   */
         this.JRE4ENT = this.Z_0;
-        /**  Dem Arbeitgeber mitgeteilte Zahlungen des Arbeitnehmers zur privaten
-             Kranken- bzw. Pflegeversicherung im Sinne des §10 Abs. 1 Nr. 3 EStG 2010
-             als Monatsbetrag in Cent (der Wert ist inabhängig vom Lohnzahlungszeitraum immer
-             als Monatsbetrag anzugeben). */
+        /**   Dem Arbeitgeber mitgeteilte Zahlungen des Arbeitnehmers zur privaten
+                         Kranken- bzw. Pflegeversicherung im Sinne des §10 Abs. 1 Nr. 3 EStG 2010
+                         als Monatsbetrag in Cent (der Wert ist inabhängig vom Lohnzahlungszeitraum immer
+                         als Monatsbetrag anzugeben).  */
         this.PKPV = this.Z_0;
-        /**  Krankenversicherung:
-             0 = gesetzlich krankenversicherte Arbeitnehmer
-             1 = ausschließlich privat krankenversicherte Arbeitnehmer OHNE Arbeitgeberzuschuss
-             2 = ausschließlich privat krankenversicherte Arbeitnehmer MIT Arbeitgeberzuschuss  */
+        /**   Krankenversicherung:
+                         0 = gesetzlich krankenversicherte Arbeitnehmer
+                         1 = ausschließlich privat krankenversicherte Arbeitnehmer OHNE Arbeitgeberzuschuss
+                         2 = ausschließlich privat krankenversicherte Arbeitnehmer MIT Arbeitgeberzuschuss   */
         this.PKV = 0;
-        /**  Zahl der beim Arbeitnehmer zu berücksichtigenden Beitragsabschläge in der sozialen Pflegeversicherung
-             bei mehr als einem Kind
-             0 = kein Abschlag
-             1 = Beitragsabschlag für das 2. Kind
-             2 = Beitragsabschläge für das 2. und 3. Kind
-             3 = Beitragsabschläge für 2. bis 4. Kinder
-             4 = Beitragsabschläge für 2. bis 5. oder mehr Kinder    */
+        /**   Zahl der beim Arbeitnehmer zu berücksichtigenden Beitragsabschläge in der sozialen Pflegeversicherung
+                         bei mehr als einem Kind
+                         0 = kein Abschlag
+                         1 = Beitragsabschlag für das 2. Kind
+                         2 = Beitragsabschläge für das 2. und 3. Kind
+                         3 = Beitragsabschläge für 2. bis 4. Kinder
+                         4 = Beitragsabschläge für 2. bis 5. oder mehr Kinder     */
         this.PVA = this.Z_0;
-        /**  1, wenn bei der sozialen Pflegeversicherung die Besonderheiten in Sachsen zu berücksichtigen sind bzw.
-                zu berücksichtigen wären, sonst 0.  */
+        /**   1, wenn bei der sozialen Pflegeversicherung die Besonderheiten in Sachsen zu berücksichtigen sind bzw.
+                             zu berücksichtigen wären, sonst 0.   */
         this.PVS = 0;
-        /**  1, wenn er der Arbeitnehmer den Zuschlag zur sozialen Pflegeversicherung
-                zu zahlen hat, sonst 0.  */
+        /**   1, wenn er der Arbeitnehmer den Zuschlag zur sozialen Pflegeversicherung
+                             zu zahlen hat, sonst 0.   */
         this.PVZ = 0;
-        /**  In SONSTB enthaltene Entschädigungen nach § 24 Nummer 1 EStG  */
+        /**   In SONSTB enthaltene Entschädigungen nach § 24 Nummer 1 EStG   */
         this.SONSTENT = this.Z_0;
-        /**   AUSGABEPARAMETER   */
-        /**  Bemessungsgrundlage fuer die Kirchenlohnsteuer in Cents  */
+        /**    AUSGABEPARAMETER    */
+        /**   Bemessungsgrundlage fuer die Kirchenlohnsteuer in Cents   */
         this.BK = this.Z_0;
-        /**  Bemessungsgrundlage der sonstigen Bezüge  für die Kirchenlohnsteuer in Cent.
-             Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei
-             Vermögensbeteiligungen (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern BK
-             (maximal bis 0). Der Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen
-             im Rahmen der Veranlagung zur Einkommensteuer bleibt unberührt.  */
+        /**   Bemessungsgrundlage der sonstigen Bezüge  für die Kirchenlohnsteuer in Cent.
+                         Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei
+                         Vermögensbeteiligungen (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern BK
+                         (maximal bis 0). Der Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen
+                         im Rahmen der Veranlagung zur Einkommensteuer bleibt unberührt.   */
         this.BKS = this.Z_0;
-        /**  Fuer den Lohnzahlungszeitraum einzubehaltende Lohnsteuer in Cents  */
+        /**   Fuer den Lohnzahlungszeitraum einzubehaltende Lohnsteuer in Cents   */
         this.LSTLZZ = this.Z_0;
-        /**  Fuer den Lohnzahlungszeitraum einzubehaltender Solidaritaetszuschlag
-             in Cents  */
+        /**   Fuer den Lohnzahlungszeitraum einzubehaltender Solidaritaetszuschlag
+                         in Cents   */
         this.SOLZLZZ = this.Z_0;
-        /**  Solidaritätszuschlag für sonstige Bezüge (ohne Vergütung für mehrjährige Tätigkeit in Cent.
-             Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei Vermögensbeteiligungen
-             (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern SOLZLZZ (maximal bis 0). Der
-             Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen im Rahmen der
-             Veranlagung zur Einkommensteuer bleibt unberührt.  */
+        /**   Solidaritätszuschlag für sonstige Bezüge (ohne Vergütung für mehrjährige Tätigkeit in Cent.
+                         Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei Vermögensbeteiligungen
+                         (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern SOLZLZZ (maximal bis 0). Der
+                         Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen im Rahmen der
+                         Veranlagung zur Einkommensteuer bleibt unberührt.   */
         this.SOLZS = this.Z_0;
-        /**  Lohnsteuer für sonstige Bezüge in Cent
-             Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei Vermögensbeteiligungen
-             (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern LSTLZZ (maximal bis 0). Der
-             Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen im Rahmen der
-             Veranlagung zur Einkommensteuer bleibt unberührt.  */
+        /**   Lohnsteuer für sonstige Bezüge in Cent
+                         Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei Vermögensbeteiligungen
+                         (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern LSTLZZ (maximal bis 0). Der
+                         Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen im Rahmen der
+                         Veranlagung zur Einkommensteuer bleibt unberührt.   */
         this.STS = this.Z_0;
-        /**  Für den Lohnzahlungszeitraum berücksichtigte Beiträge des Arbeitnehmers zur
-             privaten Basis-Krankenversicherung und privaten Pflege-Pflichtversicherung (ggf. auch
-             die Mindestvorsorgepauschale) in Cent beim laufenden Arbeitslohn. Für Zwecke der Lohn-
-             steuerbescheinigung sind die einzelnen Ausgabewerte außerhalb des eigentlichen Lohn-
-             steuerbescheinigungsprogramms zu addieren; hinzuzurechnen sind auch die Ausgabewerte
-             VKVSONST  */
+        /**   Für den Lohnzahlungszeitraum berücksichtigte Beiträge des Arbeitnehmers zur
+                         privaten Basis-Krankenversicherung und privaten Pflege-Pflichtversicherung (ggf. auch
+                         die Mindestvorsorgepauschale) in Cent beim laufenden Arbeitslohn. Für Zwecke der Lohn-
+                         steuerbescheinigung sind die einzelnen Ausgabewerte außerhalb des eigentlichen Lohn-
+                         steuerbescheinigungsprogramms zu addieren; hinzuzurechnen sind auch die Ausgabewerte
+                         VKVSONST   */
         this.VKVLZZ = this.Z_0;
-        /**  Für den Lohnzahlungszeitraum berücksichtigte Beiträge des Arbeitnehmers
-             zur privaten Basis-Krankenversicherung und privaten Pflege-Pflichtversicherung (ggf.
-             auch die Mindestvorsorgepauschale) in Cent bei sonstigen Bezügen. Der Ausgabewert kann
-             auch negativ sein.  */
+        /**   Für den Lohnzahlungszeitraum berücksichtigte Beiträge des Arbeitnehmers
+                         zur privaten Basis-Krankenversicherung und privaten Pflege-Pflichtversicherung (ggf.
+                         auch die Mindestvorsorgepauschale) in Cent bei sonstigen Bezügen. Der Ausgabewert kann
+                         auch negativ sein.   */
         this.VKVSONST = this.Z_0;
-        /**   AUSGABEPARAMETER DBA   */
-        /**  Verbrauchter Freibetrag bei Berechnung des laufenden Arbeitslohns, in Cent  */
+        /**    AUSGABEPARAMETER DBA    */
+        /**   Verbrauchter Freibetrag bei Berechnung des laufenden Arbeitslohns, in Cent   */
         this.VFRB = this.Z_0;
-        /**  Verbrauchter Freibetrag bei Berechnung des voraussichtlichen Jahresarbeitslohns, in Cent  */
+        /**   Verbrauchter Freibetrag bei Berechnung des voraussichtlichen Jahresarbeitslohns, in Cent   */
         this.VFRBS1 = this.Z_0;
-        /**  Verbrauchter Freibetrag bei Berechnung der sonstigen Bezüge, in Cent  */
+        /**   Verbrauchter Freibetrag bei Berechnung der sonstigen Bezüge, in Cent   */
         this.VFRBS2 = this.Z_0;
-        /**  Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE über
-            dem Grundfreibetrag bei der Berechnung des laufenden Arbeitslohns, in Cent  */
+        /**   Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE über
+                        dem Grundfreibetrag bei der Berechnung des laufenden Arbeitslohns, in Cent   */
         this.WVFRB = this.Z_0;
-        /**  Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE über dem Grundfreibetrag
-            bei der Berechnung des voraussichtlichen Jahresarbeitslohns, in Cent  */
+        /**   Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE über dem Grundfreibetrag
+                        bei der Berechnung des voraussichtlichen Jahresarbeitslohns, in Cent   */
         this.WVFRBO = this.Z_0;
-        /**  Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE
-            über dem Grundfreibetrag bei der Berechnung der sonstigen Bezüge, in Cent  */
+        /**   Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE
+                        über dem Grundfreibetrag bei der Berechnung der sonstigen Bezüge, in Cent   */
         this.WVFRBM = this.Z_0;
-        /**   INTERNE FELDER   */
-        /**  Altersentlastungsbetrag nach Alterseinkünftegesetz in €,
-             Cent (2 Dezimalstellen)  */
+        /**    INTERNE FELDER    */
+        /**   Altersentlastungsbetrag nach Alterseinkünftegesetz in €,
+                             Cent (2 Dezimalstellen)   */
         this.ALTE = this.Z_0;
-        /**  Arbeitnehmer-Pauschbetrag in EURO  */
+        /**   Arbeitnehmer-Pauschbetrag in EURO   */
         this.ANP = this.Z_0;
-        /**  Auf den Lohnzahlungszeitraum entfallender Anteil von Jahreswerten
-             auf ganze Cents abgerundet  */
+        /**   Auf den Lohnzahlungszeitraum entfallender Anteil von Jahreswerten
+                             auf ganze Cents abgerundet   */
         this.ANTEIL1 = this.Z_0;
-        /**  Bemessungsgrundlage für Altersentlastungsbetrag in €, Cent
-             (2 Dezimalstellen)  */
+        /**   Bemessungsgrundlage für Altersentlastungsbetrag in €, Cent
+                             (2 Dezimalstellen)   */
         this.BMG = this.Z_0;
-        /**  Beitragsbemessungsgrenze in der gesetzlichen Krankenversicherung
-            und der sozialen Pflegeversicherung in Euro  */
+        /**   Beitragsbemessungsgrenze in der gesetzlichen Krankenversicherung
+                            und der sozialen Pflegeversicherung in Euro   */
         this.BBGKVPV = this.Z_0;
-        /**  allgemeine Beitragsbemessungsgrenze in der allgemeinen Renten-versicherung in Euro  */
+        /**   allgemeine Beitragsbemessungsgrenze in der allgemeinen Renten-versicherung in Euro   */
         this.BBGRV = this.Z_0;
-        /**  Differenz zwischen ST1 und ST2 in EURO  */
+        /**   Differenz zwischen ST1 und ST2 in EURO   */
         this.DIFF = this.Z_0;
-        /**  Entlastungsbetrag für Alleinerziehende in Euro  */
+        /**   Entlastungsbetrag für Alleinerziehende in Euro   */
         this.EFA = this.Z_0;
-        /**  Versorgungsfreibetrag in €, Cent (2 Dezimalstellen)  */
+        /**   Versorgungsfreibetrag in €, Cent (2 Dezimalstellen)   */
         this.FVB = this.Z_0;
-        /**  Versorgungsfreibetrag in €, Cent (2 Dezimalstellen) für die Berechnung
-             der Lohnsteuer für den sonstigen Bezug  */
+        /**   Versorgungsfreibetrag in €, Cent (2 Dezimalstellen) für die Berechnung
+                             der Lohnsteuer für den sonstigen Bezug   */
         this.FVBSO = this.Z_0;
-        /**  Zuschlag zum Versorgungsfreibetrag in EURO  */
+        /**   Zuschlag zum Versorgungsfreibetrag in EURO   */
         this.FVBZ = this.Z_0;
-        /**  Zuschlag zum Versorgungsfreibetrag in EURO fuer die Berechnung
-             der Lohnsteuer beim sonstigen Bezug  */
+        /**   Zuschlag zum Versorgungsfreibetrag in EURO fuer die Berechnung
+                             der Lohnsteuer beim sonstigen Bezug   */
         this.FVBZSO = this.Z_0;
-        /**  Grundfreibetrag in Euro  */
+        /**   Grundfreibetrag in Euro   */
         this.GFB = this.Z_0;
-        /**  Maximaler Altersentlastungsbetrag in €  */
+        /**   Maximaler Altersentlastungsbetrag in €   */
         this.HBALTE = this.Z_0;
-        /**  Maßgeblicher maximaler Versorgungsfreibetrag in Euro, Cent (2 Dezimalstellen)  */
+        /**   Maßgeblicher maximaler Versorgungsfreibetrag in Euro, Cent (2 Dezimalstellen)   */
         this.HFVB = this.Z_0;
-        /**  Massgeblicher maximaler Zuschlag zum Versorgungsfreibetrag in €,Cent
-             (2 Dezimalstellen)  */
+        /**   Massgeblicher maximaler Zuschlag zum Versorgungsfreibetrag in €,Cent
+                             (2 Dezimalstellen)   */
         this.HFVBZ = this.Z_0;
-        /**  Massgeblicher maximaler Zuschlag zum Versorgungsfreibetrag in €, Cent
-             (2 Dezimalstellen) für die Berechnung der Lohnsteuer für den
-             sonstigen Bezug  */
+        /**   Massgeblicher maximaler Zuschlag zum Versorgungsfreibetrag in €, Cent
+                             (2 Dezimalstellen) für die Berechnung der Lohnsteuer für den
+                             sonstigen Bezug   */
         this.HFVBZSO = this.Z_0;
-        /**  Zwischenfeld zu X fuer die Berechnung der Steuer nach § 39b
-             Abs. 2 Satz 7 EStG in €  */
+        /**   Zwischenfeld zu X fuer die Berechnung der Steuer nach § 39b
+                             Abs. 2 Satz 7 EStG in €   */
         this.HOCH = this.Z_0;
-        /**  Nummer der Tabellenwerte fuer Versorgungsparameter  */
+        /**   Nummer der Tabellenwerte fuer Versorgungsparameter   */
         this.J = 0;
-        /**  Jahressteuer nach § 51a EStG, aus der Solidaritaetszuschlag und
-             Bemessungsgrundlage fuer die Kirchenlohnsteuer ermittelt werden in EURO  */
+        /**   Jahressteuer nach § 51a EStG, aus der Solidaritaetszuschlag und
+                             Bemessungsgrundlage fuer die Kirchenlohnsteuer ermittelt werden in EURO   */
         this.JBMG = this.Z_0;
-        /**  Auf einen Jahreslohn hochgerechneter LZZFREIB in €, Cent
-             (2 Dezimalstellen)  */
+        /**   Auf einen Jahreslohn hochgerechneter LZZFREIB in €, Cent
+                             (2 Dezimalstellen)   */
         this.JLFREIB = this.Z_0;
-        /**  Auf einen Jahreslohn hochgerechnete LZZHINZU in €, Cent
-             (2 Dezimalstellen)  */
+        /**   Auf einen Jahreslohn hochgerechnete LZZHINZU in €, Cent
+                             (2 Dezimalstellen)   */
         this.JLHINZU = this.Z_0;
-        /**  Jahreswert, dessen Anteil fuer einen Lohnzahlungszeitraum in
-             UPANTEIL errechnet werden soll in Cents  */
+        /**   Jahreswert, dessen Anteil fuer einen Lohnzahlungszeitraum in
+                             UPANTEIL errechnet werden soll in Cents   */
         this.JW = this.Z_0;
-        /**  Nummer der Tabellenwerte fuer Parameter bei Altersentlastungsbetrag  */
+        /**   Nummer der Tabellenwerte fuer Parameter bei Altersentlastungsbetrag   */
         this.K = 0;
-        /**  Summe der Freibetraege fuer Kinder in EURO  */
+        /**   Summe der Freibetraege fuer Kinder in EURO   */
         this.KFB = this.Z_0;
-        /**  Beitragssatz des Arbeitgebers zur Krankenversicherung  */
+        /**   Beitragssatz des Arbeitgebers zur Krankenversicherung   */
         this.KVSATZAG = this.Z_0;
-        /**  Beitragssatz des Arbeitnehmers zur Krankenversicherung  */
+        /**   Beitragssatz des Arbeitnehmers zur Krankenversicherung   */
         this.KVSATZAN = this.Z_0;
-        /**  Kennzahl fuer die Einkommensteuer-Tabellenart:
-              1 = Grundtabelle
-              2 = Splittingtabelle  */
+        /**   Kennzahl fuer die Einkommensteuer-Tabellenart:
+                             1 = Grundtabelle
+                             2 = Splittingtabelle   */
         this.KZTAB = 0;
-        /**  Jahreslohnsteuer in EURO  */
+        /**   Jahreslohnsteuer in EURO   */
         this.LSTJAHR = this.Z_0;
-        /**  Zwischenfelder der Jahreslohnsteuer in Cent  */
+        /**   Zwischenfelder der Jahreslohnsteuer in Cent   */
         this.LSTOSO = this.Z_0;
         this.LSTSO = this.Z_0;
-        /**  Mindeststeuer fuer die Steuerklassen V und VI in EURO  */
+        /**   Mindeststeuer fuer die Steuerklassen V und VI in EURO   */
         this.MIST = this.Z_0;
-        /**  Beitragssatz des Arbeitgebers zur Pflegeversicherung (6 Dezimalstellen) */
+        /**   Beitragssatz des Arbeitgebers zur Pflegeversicherung (6 Dezimalstellen)  */
         this.PVSATZAG = this.Z_0;
-        /**  Beitragssatz des Arbeitnehmers zur Pflegeversicherung (6 Dezimalstellen) */
+        /**   Beitragssatz des Arbeitnehmers zur Pflegeversicherung (6 Dezimalstellen)  */
         this.PVSATZAN = this.Z_0;
-        /**  Beitragssatz des Arbeitnehmers in der allgemeinen gesetzlichen Rentenversicherung (4 Dezimalstellen)   */
+        /**   Beitragssatz des Arbeitnehmers in der allgemeinen gesetzlichen Rentenversicherung (4 Dezimalstellen)    */
         this.RVSATZAN = this.Z_0;
-        /**  Rechenwert in Gleitkommadarstellung  */
+        /**   Rechenwert in Gleitkommadarstellung   */
         this.RW = this.Z_0;
-        /**  Sonderausgaben-Pauschbetrag in EURO  */
+        /**   Sonderausgaben-Pauschbetrag in EURO   */
         this.SAP = this.Z_0;
-        /**  Freigrenze fuer den Solidaritaetszuschlag in EURO  */
+        /**   Freigrenze fuer den Solidaritaetszuschlag in EURO   */
         this.SOLZFREI = this.Z_0;
-        /**  Solidaritaetszuschlag auf die Jahreslohnsteuer in EURO, C (2 Dezimalstellen)  */
+        /**   Solidaritaetszuschlag auf die Jahreslohnsteuer in EURO, C (2 Dezimalstellen)   */
         this.SOLZJ = this.Z_0;
-        /**  Zwischenwert fuer den Solidaritaetszuschlag auf die Jahreslohnsteuer
-             in EURO, C (2 Dezimalstellen)  */
+        /**   Zwischenwert fuer den Solidaritaetszuschlag auf die Jahreslohnsteuer
+                             in EURO, C (2 Dezimalstellen)   */
         this.SOLZMIN = this.Z_0;
-        /**  Bemessungsgrundlage des Solidaritätszuschlags zur Prüfung der Freigrenze beim Solidaritätszuschlag für sonstige Bezüge in Euro  */
+        /**   Bemessungsgrundlage des Solidaritätszuschlags zur Prüfung der Freigrenze beim Solidaritätszuschlag für sonstige Bezüge in Euro   */
         this.SOLZSBMG = this.Z_0;
-        /**  Zu versteuerndes Einkommen für die Ermittlung der Bemessungsgrundlage des Solidaritätszuschlags zur Prüfung der Freigrenze beim Solidaritätszuschlag für sonstige Bezüge in Euro, Cent (2 Dezimalstellen)  */
+        /**   Zu versteuerndes Einkommen für die Ermittlung der Bemessungsgrundlage des Solidaritätszuschlags zur Prüfung der Freigrenze beim Solidaritätszuschlag für sonstige Bezüge in Euro, Cent (2 Dezimalstellen)   */
         this.SOLZSZVE = this.Z_0;
-        /**  Bemessungsgrundlage des Solidaritätszuschlags für die Prüfung der Freigrenze beim Solidaritätszuschlag für die Vergütung für mehrjährige Tätigkeit in Euro  */
+        /**   Bemessungsgrundlage des Solidaritätszuschlags für die Prüfung der Freigrenze beim Solidaritätszuschlag für die Vergütung für mehrjährige Tätigkeit in Euro   */
         this.SOLZVBMG = this.Z_0;
-        /**  Tarifliche Einkommensteuer in EURO  */
+        /**   Tarifliche Einkommensteuer in EURO   */
         this.ST = this.Z_0;
-        /**  Tarifliche Einkommensteuer auf das 1,25-fache ZX in EURO  */
+        /**   Tarifliche Einkommensteuer auf das 1,25-fache ZX in EURO   */
         this.ST1 = this.Z_0;
-        /**  Tarifliche Einkommensteuer auf das 0,75-fache ZX in EURO  */
+        /**   Tarifliche Einkommensteuer auf das 0,75-fache ZX in EURO   */
         this.ST2 = this.Z_0;
-        /**  Bemessungsgrundlage fuer den Versorgungsfreibetrag in Cents  */
+        /**   Bemessungsgrundlage fuer den Versorgungsfreibetrag in Cents   */
         this.VBEZB = this.Z_0;
-        /**  Bemessungsgrundlage für den Versorgungsfreibetrag in Cent für
-             den sonstigen Bezug  */
+        /**   Bemessungsgrundlage für den Versorgungsfreibetrag in Cent für
+                             den sonstigen Bezug   */
         this.VBEZBSO = this.Z_0;
-        /**  Zwischenfeld zu X fuer die Berechnung der Steuer nach § 39b
-            Abs. 2 Satz 7 EStG in €  */
+        /**   Zwischenfeld zu X fuer die Berechnung der Steuer nach § 39b
+                             Abs. 2 Satz 7 EStG in €   */
         this.VERGL = this.Z_0;
-        /**  Hoechstbetrag der Vorsorgepauschale nach Alterseinkuenftegesetz in EURO, C  */
+        /**   Hoechstbetrag der Vorsorgepauschale nach Alterseinkuenftegesetz in EURO, C   */
         this.VHB = this.Z_0;
-        /**  Jahreswert der berücksichtigten Beiträge zur privaten Basis-Krankenversicherung und
-              privaten Pflege-Pflichtversicherung (ggf. auch die Mindestvorsorgepauschale) in Cent.  */
+        /**   Jahreswert der berücksichtigten Beiträge zur privaten Basis-Krankenversicherung und
+                              privaten Pflege-Pflichtversicherung (ggf. auch die Mindestvorsorgepauschale) in Cent.   */
         this.VKV = this.Z_0;
-        /**  Vorsorgepauschale in EURO, C (2 Dezimalstellen)  */
+        /**   Vorsorgepauschale in EURO, C (2 Dezimalstellen)   */
         this.VSP = this.Z_0;
-        /**  Vorsorgepauschale nach Alterseinkuenftegesetz in EURO, C  */
+        /**   Vorsorgepauschale nach Alterseinkuenftegesetz in EURO, C   */
         this.VSPN = this.Z_0;
-        /**  Zwischenwert 1 bei der Berechnung der Vorsorgepauschale nach
-             dem Alterseinkuenftegesetz in EURO, C (2 Dezimalstellen)  */
+        /**   Zwischenwert 1 bei der Berechnung der Vorsorgepauschale nach
+                             dem Alterseinkuenftegesetz in EURO, C (2 Dezimalstellen)   */
         this.VSP1 = this.Z_0;
-        /**  Zwischenwert 2 bei der Berechnung der Vorsorgepauschale nach
-             dem Alterseinkuenftegesetz in EURO, C (2 Dezimalstellen)  */
+        /**   Zwischenwert 2 bei der Berechnung der Vorsorgepauschale nach
+                             dem Alterseinkuenftegesetz in EURO, C (2 Dezimalstellen)   */
         this.VSP2 = this.Z_0;
-        /**  Vorsorgepauschale mit Teilbeträgen für die gesetzliche Kranken- und
-             soziale Pflegeversicherung nach fiktiven Beträgen oder ggf. für die
-             private Basiskrankenversicherung und private Pflege-Pflichtversicherung
-             in Euro, Cent (2 Dezimalstellen)  */
+        /**   Vorsorgepauschale mit Teilbeträgen für die gesetzliche Kranken- und
+                             soziale Pflegeversicherung nach fiktiven Beträgen oder ggf. für die
+                             private Basiskrankenversicherung und private Pflege-Pflichtversicherung
+                             in Euro, Cent (2 Dezimalstellen)   */
         this.VSP3 = this.Z_0;
-        /**  Erster Grenzwert in Steuerklasse V/VI in Euro  */
+        /**   Erster Grenzwert in Steuerklasse V/VI in Euro   */
         this.W1STKL5 = this.Z_0;
-        /**  Zweiter Grenzwert in Steuerklasse V/VI in Euro  */
+        /**   Zweiter Grenzwert in Steuerklasse V/VI in Euro   */
         this.W2STKL5 = this.Z_0;
-        /**  Dritter Grenzwert in Steuerklasse V/VI in Euro  */
+        /**   Dritter Grenzwert in Steuerklasse V/VI in Euro   */
         this.W3STKL5 = this.Z_0;
-        /**  Zu versteuerndes Einkommen gem. § 32a Abs. 1 und 2 EStG €, C
-             (2 Dezimalstellen)  */
+        /**   Zu versteuerndes Einkommen gem. § 32a Abs. 1 und 2 EStG €, C
+                             (2 Dezimalstellen)   */
         this.X = this.Z_0;
-        /**  Gem. § 32a Abs. 1 EStG (6 Dezimalstellen)  */
+        /**   Gem. § 32a Abs. 1 EStG (6 Dezimalstellen)   */
         this.Y = this.Z_0;
-        /**  Auf einen Jahreslohn hochgerechnetes RE4 in €, C (2 Dezimalstellen)
-             nach Abzug der Freibeträge nach § 39 b Abs. 2 Satz 3 und 4.  */
+        /**   Auf einen Jahreslohn hochgerechnetes RE4 in €, C (2 Dezimalstellen)
+                             nach Abzug der Freibeträge nach § 39 b Abs. 2 Satz 3 und 4.   */
         this.ZRE4 = this.Z_0;
-        /**  Auf einen Jahreslohn hochgerechnetes RE4 in €, C (2 Dezimalstellen)  */
+        /**   Auf einen Jahreslohn hochgerechnetes RE4 in €, C (2 Dezimalstellen)   */
         this.ZRE4J = this.Z_0;
-        /**  Auf einen Jahreslohn hochgerechnetes RE4 in €, C (2 Dezimalstellen)
-             nach Abzug des Versorgungsfreibetrags und des Alterentlastungsbetrags
-             zur Berechnung der Vorsorgepauschale in €, Cent (2 Dezimalstellen)  */
+        /**   Auf einen Jahreslohn hochgerechnetes RE4 in €, C (2 Dezimalstellen)
+                             nach Abzug des Versorgungsfreibetrags und des Alterentlastungsbetrags
+                             zur Berechnung der Vorsorgepauschale in €, Cent (2 Dezimalstellen)   */
         this.ZRE4VP = this.Z_0;
-        /**  Feste Tabellenfreibeträge (ohne Vorsorgepauschale) in €, Cent
-             (2 Dezimalstellen)  */
+        /**   Feste Tabellenfreibeträge (ohne Vorsorgepauschale) in €, Cent
+                             (2 Dezimalstellen)   */
         this.ZTABFB = this.Z_0;
-        /**  Auf einen Jahreslohn hochgerechnetes (VBEZ abzueglich FVB) in
-             EURO, C (2 Dezimalstellen)  */
+        /**   Auf einen Jahreslohn hochgerechnetes (VBEZ abzueglich FVB) in
+                             EURO, C (2 Dezimalstellen)   */
         this.ZVBEZ = this.Z_0;
-        /**  Auf einen Jahreslohn hochgerechnetes VBEZ in €, C (2 Dezimalstellen)  */
+        /**   Auf einen Jahreslohn hochgerechnetes VBEZ in €, C (2 Dezimalstellen)   */
         this.ZVBEZJ = this.Z_0;
-        /**  Zu versteuerndes Einkommen in €, C (2 Dezimalstellen)  */
+        /**   Zu versteuerndes Einkommen in €, C (2 Dezimalstellen)   */
         this.ZVE = this.Z_0;
-        /**  Zwischenfeld zu X fuer die Berechnung der Steuer nach § 39b
-             Abs. 2 Satz 7 EStG in €  */
+        /**   Zwischenfeld zu X fuer die Berechnung der Steuer nach § 39b
+                             Abs. 2 Satz 7 EStG in €   */
         this.ZX = this.Z_0;
-        /**  Zwischenfeld zu X fuer die Berechnung der Steuer nach § 39b
-             Abs. 2 Satz 7 EStG in €  */
+        /**   Zwischenfeld zu X fuer die Berechnung der Steuer nach § 39b
+                             Abs. 2 Satz 7 EStG in €   */
         this.ZZX = this.Z_0;
-        /**  Tabelle fuer die Vomhundertsaetze des Versorgungsfreibetrags  */
-        /**  geändert für 2025  */
+        /**   Tabelle fuer die Vomhundertsaetze des Versorgungsfreibetrags   */
+        /**   geändert für 2025   */
         this.TAB1 = [new Big(0), new Big(0.4), new Big(0.384), new Big(0.368), new Big(0.352), new Big(0.336), new Big(0.32), new Big(0.304), new Big(0.288), new Big(0.272), new Big(0.256), new Big(0.24), new Big(0.224), new Big(0.208), new Big(0.192), new Big(0.176), new Big(0.16), new Big(0.152), new Big(0.144), new Big(0.14), new Big(0.136), new Big(0.132), new Big(0.128), new Big(0.124), new Big(0.12), new Big(0.116), new Big(0.112), new Big(0.108), new Big(0.104), new Big(0.1), new Big(0.096), new Big(0.092), new Big(0.088), new Big(0.084), new Big(0.08), new Big(0.076), new Big(0.072), new Big(0.068), new Big(0.064), new Big(0.06), new Big(0.056), new Big(0.052), new Big(0.048), new Big(0.044), new Big(0.04), new Big(0.036), new Big(0.032), new Big(0.028), new Big(0.024), new Big(0.02), new Big(0.016), new Big(0.012), new Big(0.008), new Big(0.004), new Big(0)];
-        /**  Tabelle fuer die Hoechstbetrage des Versorgungsfreibetrags  */
-        /**  geändert für 2025  */
+        /**   Tabelle fuer die Hoechstbetrage des Versorgungsfreibetrags   */
+        /**   geändert für 2025   */
         this.TAB2 = [new Big(0), new Big(3000), new Big(2880), new Big(2760), new Big(2640), new Big(2520), new Big(2400), new Big(2280), new Big(2160), new Big(2040), new Big(1920), new Big(1800), new Big(1680), new Big(1560), new Big(1440), new Big(1320), new Big(1200), new Big(1140), new Big(1080), new Big(1050), new Big(1020), new Big(990), new Big(960), new Big(930), new Big(900), new Big(870), new Big(840), new Big(810), new Big(780), new Big(750), new Big(720), new Big(690), new Big(660), new Big(630), new Big(600), new Big(570), new Big(540), new Big(510), new Big(480), new Big(450), new Big(420), new Big(390), new Big(360), new Big(330), new Big(300), new Big(270), new Big(240), new Big(210), new Big(180), new Big(150), new Big(120), new Big(90), new Big(60), new Big(30), new Big(0)];
-        /**  Tabelle fuer die Zuschlaege zum Versorgungsfreibetrag  */
-        /**  geändert für 2025  */
+        /**   Tabelle fuer die Zuschlaege zum Versorgungsfreibetrag   */
+        /**   geändert für 2025   */
         this.TAB3 = [new Big(0), new Big(900), new Big(864), new Big(828), new Big(792), new Big(756), new Big(720), new Big(684), new Big(648), new Big(612), new Big(576), new Big(540), new Big(504), new Big(468), new Big(432), new Big(396), new Big(360), new Big(342), new Big(324), new Big(315), new Big(306), new Big(297), new Big(288), new Big(279), new Big(270), new Big(261), new Big(252), new Big(243), new Big(234), new Big(225), new Big(216), new Big(207), new Big(198), new Big(189), new Big(180), new Big(171), new Big(162), new Big(153), new Big(144), new Big(135), new Big(126), new Big(117), new Big(108), new Big(99), new Big(90), new Big(81), new Big(72), new Big(63), new Big(54), new Big(45), new Big(36), new Big(27), new Big(18), new Big(9), new Big(0)];
-        /**  Tabelle fuer die Vomhundertsaetze des Altersentlastungsbetrags  */
-        /**  geändert für 2025  */
+        /**   Tabelle fuer die Vomhundertsaetze des Altersentlastungsbetrags   */
+        /**   geändert für 2025   */
         this.TAB4 = [new Big(0), new Big(0.4), new Big(0.384), new Big(0.368), new Big(0.352), new Big(0.336), new Big(0.32), new Big(0.304), new Big(0.288), new Big(0.272), new Big(0.256), new Big(0.24), new Big(0.224), new Big(0.208), new Big(0.192), new Big(0.176), new Big(0.16), new Big(0.152), new Big(0.144), new Big(0.14), new Big(0.136), new Big(0.132), new Big(0.128), new Big(0.124), new Big(0.12), new Big(0.116), new Big(0.112), new Big(0.108), new Big(0.104), new Big(0.1), new Big(0.096), new Big(0.092), new Big(0.088), new Big(0.084), new Big(0.08), new Big(0.076), new Big(0.072), new Big(0.068), new Big(0.064), new Big(0.06), new Big(0.056), new Big(0.052), new Big(0.048), new Big(0.044), new Big(0.04), new Big(0.036), new Big(0.032), new Big(0.028), new Big(0.024), new Big(0.02), new Big(0.016), new Big(0.012), new Big(0.008), new Big(0.004), new Big(0)];
-        /**  Tabelle fuer die Hoechstbetraege des Altersentlastungsbetrags  */
-        /**  geändert für 2025  */
+        /**   Tabelle fuer die Hoechstbetraege des Altersentlastungsbetrags   */
+        /**   geändert für 2025   */
         this.TAB5 = [new Big(0), new Big(1900), new Big(1824), new Big(1748), new Big(1672), new Big(1596), new Big(1520), new Big(1444), new Big(1368), new Big(1292), new Big(1216), new Big(1140), new Big(1064), new Big(988), new Big(912), new Big(836), new Big(760), new Big(722), new Big(684), new Big(665), new Big(646), new Big(627), new Big(608), new Big(589), new Big(570), new Big(551), new Big(532), new Big(513), new Big(494), new Big(475), new Big(456), new Big(437), new Big(418), new Big(399), new Big(380), new Big(361), new Big(342), new Big(323), new Big(304), new Big(285), new Big(266), new Big(247), new Big(228), new Big(209), new Big(190), new Big(171), new Big(152), new Big(133), new Big(114), new Big(95), new Big(76), new Big(57), new Big(38), new Big(19), new Big(0)];
-        /**  Zahlenkonstanten fuer im Plan oft genutzte BigDecimal Werte  */
+        /**   Zahlenkonstanten fuer im Plan oft genutzte BigDecimal Werte   */
         this.ZAHL1 = this.Z_1;
         this.ZAHL2 = new Big(2);
         this.ZAHL5 = new Big(5);
@@ -301,7 +301,7 @@ export class Lohnsteuer2025Big {
         this.ZAHL1000 = new Big(1000);
         this.ZAHL10000 = new Big(10000);
     }
-    /**  PROGRAMMABLAUFPLAN, PAP Seite 13  */
+    /**   PROGRAMMABLAUFPLAN, PAP Seite 13   */
     calculate() {
         this.MPARA();
         this.MRE4JL();
@@ -311,25 +311,32 @@ export class Lohnsteuer2025Big {
         this.MBERECH();
         this.MSONST();
     }
-    /**  Zuweisung von Werten für bestimmte Sozialversicherungsparameter  PAP Seite 14  */
+    /**   Zuweisung von Werten für bestimmte Sozialversicherungsparameter  PAP Seite 14   */
     MPARA() {
-        if (this.KRV < 1) { /**  &lt; = <  */
-            this.BBGRV = new Big(96600); /**  Geändert für 2025  */
+        if (this.KRV < 1) {
+            /**   &lt; = <   */
+            this.BBGRV = new Big(96600);
+            /**   Geändert für 2025   */
             this.RVSATZAN = new Big(0.093);
         }
         else {
-            /**  Nichts zu tun  */
+            /**   Nichts zu tun   */
         }
-        this.BBGKVPV = new Big(66150); /**  Geändert für 2025  */
+        this.BBGKVPV = new Big(66150);
+        /**   Geändert für 2025   */
         this.KVSATZAN = (this.KVZ.div(this.ZAHL2).div(this.ZAHL100)).add(new Big(0.07));
-        this.KVSATZAG = new Big(0.0125).add(new Big(0.07)); /**  geändert für 2025  */
+        this.KVSATZAG = new Big(0.0125).add(new Big(0.07));
+        /**   geändert für 2025   */
         if (this.PVS == 1) {
-            this.PVSATZAN = new Big(0.023); /**  geändert für 2025  */
-            this.PVSATZAG = new Big(0.013); /**  geändert für 2025  */
+            this.PVSATZAN = new Big(0.023);
+            /**   geändert für 2025   */
+            this.PVSATZAG = new Big(0.013);
+            /**   geändert für 2025   */
         }
         else {
             this.PVSATZAN = new Big(0.018);
-            this.PVSATZAG = new Big(0.018); /**  geändert für 2025  */
+            this.PVSATZAG = new Big(0.018);
+            /**   geändert für 2025   */
         }
         if (this.PVZ == 1) {
             this.PVSATZAN = this.PVSATZAN.add(new Big(0.006));
@@ -337,13 +344,17 @@ export class Lohnsteuer2025Big {
         else {
             this.PVSATZAN = this.PVSATZAN.sub(this.PVA.mul(new Big(0.0025)));
         }
-        this.W1STKL5 = new Big(13432); /**  geändert für 2025  */
-        this.W2STKL5 = new Big(33380); /**  geändert für 2025  */
+        this.W1STKL5 = new Big(13785);
+        /**   geändert für 2025   */
+        this.W2STKL5 = new Big(34240);
+        /**   geändert für 2025   */
         this.W3STKL5 = new Big(222260);
-        this.GFB = new Big(11784);
-        this.SOLZFREI = new Big(18130);
+        this.GFB = new Big(12096);
+        /**   geändert für 2025   */
+        this.SOLZFREI = new Big(19950);
+        /**   geändert für 2025   */
     }
-    /**  Ermittlung des Jahresarbeitslohns nach § 39 b Abs. 2 Satz 2 EStG, PAP Seite 15  */
+    /**   Ermittlung des Jahresarbeitslohns nach § 39 b Abs. 2 Satz 2 EStG, PAP Seite 15   */
     MRE4JL() {
         if (this.LZZ == 1) {
             this.ZRE4J = this.RE4.div(this.ZAHL100).round(2, Big.roundDown);
@@ -377,7 +388,7 @@ export class Lohnsteuer2025Big {
             this.f = 1;
         }
     }
-    /**  Freibeträge für Versorgungsbezüge, Altersentlastungsbetrag (§ 39b Abs. 2 Satz 3 EStG), PAP Seite 16  */
+    /**   Freibeträge für Versorgungsbezüge, Altersentlastungsbetrag (§ 39b Abs. 2 Satz 3 EStG), PAP Seite 16   */
     MRE4() {
         if (this.ZVBEZJ.cmp(this.Z_0) == 0) {
             this.FVBZ = this.Z_0;
@@ -390,16 +401,19 @@ export class Lohnsteuer2025Big {
                 this.J = 1;
             }
             else {
-                if (this.VJAHR < 2058) { /**  geändert für 2025  */
+                if (this.VJAHR < 2058) {
+                    /**   geändert für 2025   */
                     this.J = this.VJAHR - 2004;
                 }
                 else {
-                    this.J = 54; /**  geändert für 2025  */
+                    this.J = 54;
+                    /**   geändert für 2025   */
                 }
             }
             if (this.LZZ == 1) {
                 this.VBEZB = (this.VBEZM.mul(new Big(this.ZMVB))).add(this.VBEZS);
-                this.HFVB = this.TAB2[this.J].div(this.ZAHL12).mul(new Big(this.ZMVB)).round(0, Big.roundUp); /**  geändert für 2025  */
+                this.HFVB = this.TAB2[this.J].div(this.ZAHL12).mul(new Big(this.ZMVB)).round(0, Big.roundUp);
+                /**   geändert für 2025   */
                 this.FVBZ = this.TAB3[this.J].div(this.ZAHL12).mul(new Big(this.ZMVB)).round(0, Big.roundUp);
             }
             else {
@@ -433,7 +447,7 @@ export class Lohnsteuer2025Big {
         }
         this.MRE4ALTE();
     }
-    /**  Altersentlastungsbetrag (§ 39b Abs. 2 Satz 3 EStG), PAP Seite 17  */
+    /**   Altersentlastungsbetrag (§ 39b Abs. 2 Satz 3 EStG), PAP Seite 17   */
     MRE4ALTE() {
         if (this.ALTER1 == 0) {
             this.ALTE = this.Z_0;
@@ -443,15 +457,17 @@ export class Lohnsteuer2025Big {
                 this.K = 1;
             }
             else {
-                if (this.AJAHR < 2058) { /**  geändert für 2025  */
+                if (this.AJAHR < 2058) {
+                    /**   geändert für 2025   */
                     this.K = this.AJAHR - 2004;
                 }
                 else {
-                    this.K = 54; /**  geändert für 2025  */
+                    this.K = 54;
+                    /**   geändert für 2025   */
                 }
             }
             this.BMG = this.ZRE4J.sub(this.ZVBEZJ);
-            /**  Lt. PAP muss hier auf ganze EUR gerundet werden  */
+            /**   Lt. PAP muss hier auf ganze EUR gerundet werden   */
             this.ALTE = (this.BMG.mul(this.TAB4[this.K])).round(0, Big.roundUp);
             this.HBALTE = this.TAB5[this.K];
             if (this.ALTE.cmp(this.HBALTE) == 1) {
@@ -459,7 +475,7 @@ export class Lohnsteuer2025Big {
             }
         }
     }
-    /**  Ermittlung des Jahresarbeitslohns nach Abzug der Freibeträge nach § 39 b Abs. 2 Satz 3 und 4 EStG, PAP Seite 20  */
+    /**   Ermittlung des Jahresarbeitslohns nach Abzug der Freibeträge nach § 39 b Abs. 2 Satz 3 und 4 EStG, PAP Seite 20   */
     MRE4ABZ() {
         this.ZRE4 = (this.ZRE4J.sub(this.FVB).sub(this.ALTE).sub(this.JLFREIB).add(this.JLHINZU)).round(2, Big.roundDown);
         if (this.ZRE4.cmp(this.Z_0) == -1) {
@@ -471,19 +487,21 @@ export class Lohnsteuer2025Big {
             this.ZVBEZ = this.Z_0;
         }
     }
-    /**  Berechnung fuer laufende Lohnzahlungszeitraueme Seite 21 */
+    /**   Berechnung fuer laufende Lohnzahlungszeitraueme Seite 21  */
     MBERECH() {
         this.MZTABFB();
         this.VFRB = ((this.ANP.add(this.FVB.add(this.FVBZ))).mul(this.ZAHL100)).round(0, Big.roundDown);
         this.MLSTJAHR();
         this.WVFRB = ((this.ZVE.sub(this.GFB)).mul(this.ZAHL100)).round(0, Big.roundDown);
-        if (this.WVFRB.cmp(this.Z_0) == -1) { /**  WVFRB < 0  */
+        if (this.WVFRB.cmp(this.Z_0) == -1) {
+            /**   WVFRB < 0   */
             this.WVFRB = new Big(0);
         }
         this.LSTJAHR = (this.ST.mul(new Big(this.f))).round(0, Big.roundDown);
         this.UPLSTLZZ();
         this.UPVKVLZZ();
-        if (this.ZKF.cmp(this.Z_0) == 1) { /**  ZKF > 0  */
+        if (this.ZKF.cmp(this.Z_0) == 1) {
+            /**   ZKF > 0   */
             this.ZTABFB = this.ZTABFB.add(this.KFB);
             this.MRE4ABZ();
             this.MLSTJAHR();
@@ -494,7 +512,7 @@ export class Lohnsteuer2025Big {
         }
         this.MSOLZ();
     }
-    /**  Ermittlung der festen Tabellenfreibeträge (ohne Vorsorgepauschale), PAP Seite 22  */
+    /**   Ermittlung der festen Tabellenfreibeträge (ohne Vorsorgepauschale), PAP Seite 22   */
     MZTABFB() {
         this.ANP = this.Z_0;
         if (this.ZVBEZ.cmp(this.Z_0) >= 0 && this.ZVBEZ.cmp(this.FVBZ) == -1) {
@@ -527,24 +545,28 @@ export class Lohnsteuer2025Big {
         this.KZTAB = 1;
         if (this.STKL == 1) {
             this.SAP = new Big(36);
-            this.KFB = (this.ZKF.mul(new Big(9540))).round(0, Big.roundDown); /**  geändert für 2025  */
+            this.KFB = (this.ZKF.mul(new Big(9600))).round(0, Big.roundDown);
+            /**   geändert für 2025   */
         }
         else {
             if (this.STKL == 2) {
                 this.EFA = new Big(4260);
                 this.SAP = new Big(36);
-                this.KFB = (this.ZKF.mul(new Big(9540))).round(0, Big.roundDown); /**  geändert für 2025  */
+                this.KFB = (this.ZKF.mul(new Big(9600))).round(0, Big.roundDown);
+                /**   geändert für 2025   */
             }
             else {
                 if (this.STKL == 3) {
                     this.KZTAB = 2;
                     this.SAP = new Big(36);
-                    this.KFB = (this.ZKF.mul(new Big(9540))).round(0, Big.roundDown); /**  geändert für 2025  */
+                    this.KFB = (this.ZKF.mul(new Big(9600))).round(0, Big.roundDown);
+                    /**   geändert für 2025   */
                 }
                 else {
                     if (this.STKL == 4) {
                         this.SAP = new Big(36);
-                        this.KFB = (this.ZKF.mul(new Big(4770))).round(0, Big.roundDown); /**  geändert für 2025  */
+                        this.KFB = (this.ZKF.mul(new Big(4800))).round(0, Big.roundDown);
+                        /**   geändert für 2025   */
                     }
                     else {
                         if (this.STKL == 5) {
@@ -560,20 +582,21 @@ export class Lohnsteuer2025Big {
         }
         this.ZTABFB = (this.EFA.add(this.ANP).add(this.SAP).add(this.FVBZ)).round(2, Big.roundDown);
     }
-    /**  Ermittlung Jahreslohnsteuer, PAP Seite 23  */
+    /**   Ermittlung Jahreslohnsteuer, PAP Seite 23   */
     MLSTJAHR() {
         this.UPEVP();
-        this.ZVE = this.ZRE4.sub(this.ZTABFB).sub(this.VSP); /**  geändert für 2025  */
+        this.ZVE = this.ZRE4.sub(this.ZTABFB).sub(this.VSP);
+        /**   geändert für 2025   */
         this.UPMLST();
     }
-    /**  PAP Seite 24  */
+    /**   PAP Seite 24   */
     UPVKVLZZ() {
         this.UPVKV();
         this.JW = this.VKV;
         this.UPANTEIL();
         this.VKVLZZ = this.ANTEIL1;
     }
-    /**  PAP Seite 24  */
+    /**   PAP Seite 24   */
     UPVKV() {
         if (this.PKV > 0) {
             if (this.VSP2.cmp(this.VSP3) == 1) {
@@ -587,13 +610,13 @@ export class Lohnsteuer2025Big {
             this.VKV = this.Z_0;
         }
     }
-    /**  PAP Seite 25  */
+    /**   PAP Seite 25   */
     UPLSTLZZ() {
         this.JW = this.LSTJAHR.mul(this.ZAHL100);
         this.UPANTEIL();
         this.LSTLZZ = this.ANTEIL1;
     }
-    /**  Ermittlung der Jahreslohnsteuer aus dem Einkommensteuertarif. PAP Seite 26  */
+    /**   Ermittlung der Jahreslohnsteuer aus dem Einkommensteuertarif. PAP Seite 26   */
     UPMLST() {
         if (this.ZVE.cmp(this.ZAHL1) == -1) {
             this.ZVE = this.Z_0;
@@ -603,13 +626,14 @@ export class Lohnsteuer2025Big {
             this.X = (this.ZVE.div(new Big(this.KZTAB))).round(0, Big.roundDown);
         }
         if (this.STKL < 5) {
-            this.UPTAB24();
+            this.UPTAB25();
+            /**   geändert für 2025   */
         }
         else {
             this.MST5_6();
         }
     }
-    /**  	Vorsorgepauschale (§ 39b Absatz 2 Satz 5 Nummer 3 und Absatz 4 EStG) PAP Seite 27   */
+    /**   	Vorsorgepauschale (§ 39b Absatz 2 Satz 5 Nummer 3 und Absatz 4 EStG) PAP Seite 27    */
     UPEVP() {
         if (this.KRV == 1) {
             this.VSP1 = this.Z_0;
@@ -636,7 +660,7 @@ export class Lohnsteuer2025Big {
             this.VSP = this.VSPN.round(2, Big.roundDown);
         }
     }
-    /**  Vorsorgepauschale (§39b Abs. 2 Satz 5 Nr 3 EStG) Vergleichsberechnung fuer Guenstigerpruefung, PAP Seite 28  */
+    /**   Vorsorgepauschale (§39b Abs. 2 Satz 5 Nr 3 EStG) Vergleichsberechnung fuer Guenstigerpruefung, PAP Seite 28   */
     MVSP() {
         if (this.ZRE4VP.cmp(this.BBGKVPV) == 1) {
             this.ZRE4VP = this.BBGKVPV;
@@ -657,7 +681,7 @@ export class Lohnsteuer2025Big {
         }
         this.VSP = this.VSP3.add(this.VSP1).round(0, Big.roundUp);
     }
-    /**  Lohnsteuer fuer die Steuerklassen V und VI (§ 39b Abs. 2 Satz 7 EStG), PAP Seite 29  */
+    /**   Lohnsteuer fuer die Steuerklassen V und VI (§ 39b Abs. 2 Satz 7 EStG), PAP Seite 29   */
     MST5_6() {
         this.ZZX = this.X;
         if (this.ZZX.cmp(this.W2STKL5) == 1) {
@@ -688,13 +712,15 @@ export class Lohnsteuer2025Big {
             }
         }
     }
-    /**  Unterprogramm zur Lohnsteuer fuer die Steuerklassen V und VI (§ 39b Abs. 2 Satz 7 EStG), PAP Seite 30  */
+    /**   Unterprogramm zur Lohnsteuer fuer die Steuerklassen V und VI (§ 39b Abs. 2 Satz 7 EStG), PAP Seite 30   */
     UP5_6() {
         this.X = (this.ZX.mul(new Big(1.25))).round(2, Big.roundDown);
-        this.UPTAB24();
+        this.UPTAB25();
+        /**   geändert für 2025   */
         this.ST1 = this.ST;
         this.X = (this.ZX.mul(new Big(0.75))).round(2, Big.roundDown);
-        this.UPTAB24();
+        this.UPTAB25();
+        /**   geändert für 2025   */
         this.ST2 = this.ST;
         this.DIFF = (this.ST1.sub(this.ST2)).mul(this.ZAHL2);
         this.MIST = (this.ZX.mul(new Big(0.14))).round(0, Big.roundDown);
@@ -705,7 +731,7 @@ export class Lohnsteuer2025Big {
             this.ST = this.DIFF;
         }
     }
-    /**  Solidaritaetszuschlag, PAP Seite 31  */
+    /**   Solidaritaetszuschlag, PAP Seite 31   */
     MSOLZ() {
         this.SOLZFREI = (this.SOLZFREI.mul(new Big(this.KZTAB)));
         if (this.JBMG.cmp(this.SOLZFREI) == 1) {
@@ -730,7 +756,7 @@ export class Lohnsteuer2025Big {
             this.BK = this.Z_0;
         }
     }
-    /**  Anteil von Jahresbetraegen fuer einen LZZ (§ 39b Abs. 2 Satz 9 EStG), PAP Seite 32  */
+    /**   Anteil von Jahresbetraegen fuer einen LZZ (§ 39b Abs. 2 Satz 9 EStG), PAP Seite 32   */
     UPANTEIL() {
         if (this.LZZ == 1) {
             this.ANTEIL1 = this.JW;
@@ -749,7 +775,7 @@ export class Lohnsteuer2025Big {
             }
         }
     }
-    /**  Berechnung sonstiger Bezuege nach § 39b Abs. 3 Saetze 1 bis 8 EStG), PAP Seite 33  */
+    /**   Berechnung sonstiger Bezuege nach § 39b Abs. 3 Saetze 1 bis 8 EStG), PAP Seite 33   */
     MSONST() {
         this.LZZ = 1;
         if (this.ZMVB == 0) {
@@ -772,36 +798,42 @@ export class Lohnsteuer2025Big {
             this.MRE4SONST();
             this.MLSTJAHR();
             this.WVFRBM = (this.ZVE.sub(this.GFB)).mul(this.ZAHL100).round(2, Big.roundDown);
-            if (this.WVFRBM.cmp(this.Z_0) == -1) { /**  WVFRBM < 0  */
+            if (this.WVFRBM.cmp(this.Z_0) == -1) {
+                /**   WVFRBM < 0   */
                 this.WVFRBM = this.Z_0;
             }
             this.UPVKV();
             this.VKVSONST = this.VKV.sub(this.VKVSONST);
             this.LSTSO = this.ST.mul(this.ZAHL100);
-            /**  lt. PAP:  "Hinweis: negative Zahlen werden nach ihrem Betrag gerundet!"  */
-            /**  Fallunterscheidung bzgl. negativer Zahlen nicht nötig, da die Java-Klasse BigDecimal.ROUND_DOWN   */
-            /**  die Ziffer und nicht die Zahl abrundet, also aus -4.5 wird -4 und aus 4.5 wird 4  */
+            /**   lt. PAP:  "Hinweis: negative Zahlen werden nach ihrem Betrag gerundet!"   */
+            /**   Fallunterscheidung bzgl. negativer Zahlen nicht nötig, da die Java-Klasse BigDecimal.ROUND_DOWN    */
+            /**   die Ziffer und nicht die Zahl abrundet, also aus -4.5 wird -4 und aus 4.5 wird 4   */
             this.STS = this.LSTSO.sub(this.LSTOSO).mul(new Big(this.f)).div(this.ZAHL100).round(0, Big.roundDown).mul(this.ZAHL100);
             this.STSMIN();
         }
     }
-    /**  PAP Seite 34  */
+    /**   PAP Seite 34   */
     STSMIN() {
-        if (this.STS.cmp(this.Z_0) == -1) { /**  STS < 0  */
-            if (this.MBV.cmp(this.Z_0) == 0) { /**   MBV = 0   */
-                /**  absichtlich leer  */
+        if (this.STS.cmp(this.Z_0) == -1) {
+            /**   STS < 0   */
+            if (this.MBV.cmp(this.Z_0) == 0) {
+                /**    MBV = 0    */
+                /**   absichtlich leer   */
             }
             else {
                 this.LSTLZZ = this.LSTLZZ.add(this.STS);
-                if (this.LSTLZZ.cmp(this.Z_0) == -1) { /**   LSTLZZ < 0  */
+                if (this.LSTLZZ.cmp(this.Z_0) == -1) {
+                    /**    LSTLZZ < 0   */
                     this.LSTLZZ = this.Z_0;
                 }
                 this.SOLZLZZ = this.SOLZLZZ.add(this.STS.mul(new Big(5.5).div(this.ZAHL100))).round(0, Big.roundDown);
-                if (this.SOLZLZZ.cmp(this.Z_0) == -1) { /**   SOLZLZZ < 0  */
+                if (this.SOLZLZZ.cmp(this.Z_0) == -1) {
+                    /**    SOLZLZZ < 0   */
                     this.SOLZLZZ = this.Z_0;
                 }
                 this.BK = this.BK.add(this.STS);
-                if (this.BK.cmp(this.Z_0) == -1) { /**   BK < 0  */
+                if (this.BK.cmp(this.Z_0) == -1) {
+                    /**    BK < 0   */
                     this.BK = this.Z_0;
                 }
             }
@@ -818,36 +850,41 @@ export class Lohnsteuer2025Big {
             this.BKS = this.Z_0;
         }
     }
-    /**  Berechnung des SolZ auf sonstige Bezüge, PAP Seite 35  */
+    /**   Berechnung des SolZ auf sonstige Bezüge, PAP Seite 35   */
     MSOLZSTS() {
-        if (this.ZKF.cmp(this.Z_0) == 1) { /**  ZKF > 0  */
+        if (this.ZKF.cmp(this.Z_0) == 1) {
+            /**   ZKF > 0   */
             this.SOLZSZVE = this.ZVE.sub(this.KFB);
         }
         else {
             this.SOLZSZVE = this.ZVE;
         }
-        if (this.SOLZSZVE.cmp(this.ZAHL1) == -1) { /**  SOLZSZVE < 1  */
+        if (this.SOLZSZVE.cmp(this.ZAHL1) == -1) {
+            /**   SOLZSZVE < 1   */
             this.SOLZSZVE = this.Z_0;
             this.X = this.Z_0;
         }
         else {
             this.X = this.SOLZSZVE.div(new Big(this.KZTAB)).round(0, Big.roundDown);
         }
-        if (this.STKL < 5) { /**  STKL < 5  */
-            this.UPTAB24();
+        if (this.STKL < 5) {
+            /**   STKL < 5   */
+            this.UPTAB25();
+            /**   geändert für 2025   */
         }
         else {
             this.MST5_6();
         }
         this.SOLZSBMG = this.ST.mul(new Big(this.f)).round(0, Big.roundDown);
-        if (this.SOLZSBMG.cmp(this.SOLZFREI) == 1) { /**  SOLZSBMG > SOLZFREI  */
+        if (this.SOLZSBMG.cmp(this.SOLZFREI) == 1) {
+            /**   SOLZSBMG > SOLZFREI   */
             this.SOLZS = this.STS.mul(new Big(5.5)).div(this.ZAHL100).round(0, Big.roundDown);
         }
         else {
             this.SOLZS = this.Z_0;
         }
     }
-    /**  Sonderberechnung ohne sonstige Bezüge für Berechnung bei sonstigen Bezügen oder Vergütung für mehrjährige Tätigkeit, PAP Seite 36  */
+    /**   Sonderberechnung ohne sonstige Bezüge für Berechnung bei sonstigen Bezügen oder Vergütung für mehrjährige Tätigkeit, PAP Seite 36   */
     MOSONST() {
         this.ZRE4J = (this.JRE4.div(this.ZAHL100)).round(2, Big.roundDown);
         this.ZVBEZJ = (this.JVBEZ.div(this.ZAHL100)).round(2, Big.roundDown);
@@ -865,43 +902,52 @@ export class Lohnsteuer2025Big {
         }
         this.LSTOSO = this.ST.mul(this.ZAHL100);
     }
-    /**  Sonderberechnung mit sonstige Bezüge für Berechnung bei sonstigen Bezügen oder Vergütung für mehrjährige Tätigkeit, PAP Seite 37  */
+    /**   Sonderberechnung mit sonstige Bezüge für Berechnung bei sonstigen Bezügen oder Vergütung für mehrjährige Tätigkeit, PAP Seite 37   */
     MRE4SONST() {
         this.MRE4();
         this.FVB = this.FVBSO;
         this.MRE4ABZ();
-        /**  Änderung für 2022   */
+        /**   Änderung für 2022    */
         this.ZRE4VP = this.ZRE4VP.add(this.MBV.div(this.ZAHL100)).sub(this.JRE4ENT.div(this.ZAHL100)).sub(this.SONSTENT.div(this.ZAHL100));
         this.FVBZ = this.FVBZSO;
         this.MZTABFB();
         this.VFRBS2 = ((((this.ANP.add(this.FVB).add(this.FVBZ))).mul(this.ZAHL100))).sub(this.VFRBS1);
     }
-    /**  Tarifliche Einkommensteuer §32a EStG, PAP Seite 38  */
-    UPTAB24() {
+    /**   Tarifliche Einkommensteuer §32a EStG, PAP Seite 38   */
+    UPTAB25() {
+        /**   geändert für 2025   */
         if (this.X.cmp(this.GFB.add(this.ZAHL1)) == -1) {
             this.ST = this.Z_0;
         }
         else {
-            if (this.X.cmp(new Big(17006)) == -1) {
+            if (this.X.cmp(new Big(17444)) == -1) {
+                /**   geändert für 2025   */
                 this.Y = (this.X.sub(this.GFB)).div(this.ZAHL10000).round(6, Big.roundDown);
-                this.RW = this.Y.mul(new Big(954.8));
+                this.RW = this.Y.mul(new Big(932.30));
+                /**   geändert für 2025   */
                 this.RW = this.RW.add(new Big(1400));
                 this.ST = (this.RW.mul(this.Y)).round(0, Big.roundDown);
             }
             else {
-                if (this.X.cmp(new Big(66761)) == -1) {
-                    this.Y = (this.X.sub(new Big(17005))).div(this.ZAHL10000).round(6, Big.roundDown);
-                    this.RW = this.Y.mul(new Big(181.19));
+                if (this.X.cmp(new Big(68481)) == -1) {
+                    /**   geändert für 2025   */
+                    this.Y = (this.X.sub(new Big(17443))).div(this.ZAHL10000).round(6, Big.roundDown);
+                    /**   geändert für 2025   */
+                    this.RW = this.Y.mul(new Big(176.64));
+                    /**   geändert für 2025   */
                     this.RW = this.RW.add(new Big(2397));
                     this.RW = this.RW.mul(this.Y);
-                    this.ST = (this.RW.add(new Big(991.21))).round(0, Big.roundDown);
+                    this.ST = (this.RW.add(new Big(1015.13))).round(0, Big.roundDown);
+                    /**   geändert für 2025   */
                 }
                 else {
                     if (this.X.cmp(new Big(277826)) == -1) {
-                        this.ST = ((this.X.mul(new Big(0.42))).sub(new Big(10636.31))).round(0, Big.roundDown);
+                        this.ST = ((this.X.mul(new Big(0.42))).sub(new Big(10911.92))).round(0, Big.roundDown);
+                        /**   geändert für 2025   */
                     }
                     else {
-                        this.ST = ((this.X.mul(new Big(0.45))).sub(new Big(18971.06))).round(0, Big.roundDown);
+                        this.ST = ((this.X.mul(new Big(0.45))).sub(new Big(19246.67))).round(0, Big.roundDown);
+                        /**   geändert für 2025   */
                     }
                 }
             }
@@ -911,7 +957,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for af.
      * <p>
-     *  1, wenn die Anwendung des Faktorverfahrens gewählt wurden (nur in Steuerklasse IV)
+     *   1, wenn die Anwendung des Faktorverfahrens gewählt wurden (nur in Steuerklasse IV)
      * <p>
      * @return the value
      */
@@ -921,7 +967,7 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for af.
      * <p>
-     *  1, wenn die Anwendung des Faktorverfahrens gewählt wurden (nur in Steuerklasse IV)
+     *   1, wenn die Anwendung des Faktorverfahrens gewählt wurden (nur in Steuerklasse IV)
      * <p>
      * @param {number} af input value
      */
@@ -931,8 +977,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for AJAHR.
      * <p>
-     *  Auf die Vollendung des 64. Lebensjahres folgende
-                 Kalenderjahr (erforderlich, wenn ALTER1=1)
+     *   Auf die Vollendung des 64. Lebensjahres folgende
+                             Kalenderjahr (erforderlich, wenn ALTER1=1)
      * <p>
      * @return the value
      */
@@ -942,8 +988,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for AJAHR.
      * <p>
-     *  Auf die Vollendung des 64. Lebensjahres folgende
-                 Kalenderjahr (erforderlich, wenn ALTER1=1)
+     *   Auf die Vollendung des 64. Lebensjahres folgende
+                             Kalenderjahr (erforderlich, wenn ALTER1=1)
      * <p>
      * @param {number} AJAHR input value
      */
@@ -953,8 +999,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for ALTER1.
      * <p>
-     *  1, wenn das 64. Lebensjahr zu Beginn des Kalenderjahres vollendet wurde, in dem
-                 der Lohnzahlungszeitraum endet (§ 24 a EStG), sonst = 0
+     *   1, wenn das 64. Lebensjahr zu Beginn des Kalenderjahres vollendet wurde, in dem
+                             der Lohnzahlungszeitraum endet (§ 24 a EStG), sonst = 0
      * <p>
      * @return the value
      */
@@ -964,8 +1010,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for ALTER1.
      * <p>
-     *  1, wenn das 64. Lebensjahr zu Beginn des Kalenderjahres vollendet wurde, in dem
-                 der Lohnzahlungszeitraum endet (§ 24 a EStG), sonst = 0
+     *   1, wenn das 64. Lebensjahr zu Beginn des Kalenderjahres vollendet wurde, in dem
+                             der Lohnzahlungszeitraum endet (§ 24 a EStG), sonst = 0
      * <p>
      * @param {number} ALTER1 input value
      */
@@ -975,7 +1021,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for f.
      * <p>
-     *  eingetragener Faktor mit drei Nachkommastellen
+     *   eingetragener Faktor mit drei Nachkommastellen
      * <p>
      * @return the value
      */
@@ -985,7 +1031,7 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for f.
      * <p>
-     *  eingetragener Faktor mit drei Nachkommastellen
+     *   eingetragener Faktor mit drei Nachkommastellen
      * <p>
      * @param {number} f input value
      */
@@ -995,10 +1041,10 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for JFREIB.
      * <p>
-     *  Jahresfreibetrag für die Ermittlung der Lohnsteuer für die sonstigen Bezüge
-                 sowie für Vermögensbeteiligungen nach § 19a Absatz 1 und 4 EStG nach Maßgabe der
-                 elektronischen Lohnsteuerabzugsmerkmale nach § 39e EStG oder der Eintragung
-                 auf der Bescheinigung für den Lohnsteuerabzug 2025 in Cent (ggf. 0)
+     *   Jahresfreibetrag für die Ermittlung der Lohnsteuer für die sonstigen Bezüge
+                             sowie für Vermögensbeteiligungen nach § 19a Absatz 1 und 4 EStG nach Maßgabe der
+                             elektronischen Lohnsteuerabzugsmerkmale nach § 39e EStG oder der Eintragung
+                             auf der Bescheinigung für den Lohnsteuerabzug 2025 in Cent (ggf. 0)
      * <p>
      * @return the value
      */
@@ -1008,10 +1054,10 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for JFREIB.
      * <p>
-     *  Jahresfreibetrag für die Ermittlung der Lohnsteuer für die sonstigen Bezüge
-                 sowie für Vermögensbeteiligungen nach § 19a Absatz 1 und 4 EStG nach Maßgabe der
-                 elektronischen Lohnsteuerabzugsmerkmale nach § 39e EStG oder der Eintragung
-                 auf der Bescheinigung für den Lohnsteuerabzug 2025 in Cent (ggf. 0)
+     *   Jahresfreibetrag für die Ermittlung der Lohnsteuer für die sonstigen Bezüge
+                             sowie für Vermögensbeteiligungen nach § 19a Absatz 1 und 4 EStG nach Maßgabe der
+                             elektronischen Lohnsteuerabzugsmerkmale nach § 39e EStG oder der Eintragung
+                             auf der Bescheinigung für den Lohnsteuerabzug 2025 in Cent (ggf. 0)
      * <p>
      * @param {Big} JFREIB input value
      */
@@ -1021,10 +1067,10 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for JHINZU.
      * <p>
-     *  Jahreshinzurechnungsbetrag für die Ermittlung der Lohnsteuer für die sonstigen Bezüge
-                 sowie für Vermögensbeteiligungen nach § 19a Absatz 1 und 4 EStG nach Maßgabe der
-                 elektronischen Lohnsteuerabzugsmerkmale nach § 39e EStG oder der Eintragung auf der
-                 Bescheinigung für den Lohnsteuerabzug 2025 in Cent (ggf. 0)
+     *   Jahreshinzurechnungsbetrag für die Ermittlung der Lohnsteuer für die sonstigen Bezüge
+                             sowie für Vermögensbeteiligungen nach § 19a Absatz 1 und 4 EStG nach Maßgabe der
+                             elektronischen Lohnsteuerabzugsmerkmale nach § 39e EStG oder der Eintragung auf der
+                             Bescheinigung für den Lohnsteuerabzug 2025 in Cent (ggf. 0)
      * <p>
      * @return the value
      */
@@ -1034,10 +1080,10 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for JHINZU.
      * <p>
-     *  Jahreshinzurechnungsbetrag für die Ermittlung der Lohnsteuer für die sonstigen Bezüge
-                 sowie für Vermögensbeteiligungen nach § 19a Absatz 1 und 4 EStG nach Maßgabe der
-                 elektronischen Lohnsteuerabzugsmerkmale nach § 39e EStG oder der Eintragung auf der
-                 Bescheinigung für den Lohnsteuerabzug 2025 in Cent (ggf. 0)
+     *   Jahreshinzurechnungsbetrag für die Ermittlung der Lohnsteuer für die sonstigen Bezüge
+                             sowie für Vermögensbeteiligungen nach § 19a Absatz 1 und 4 EStG nach Maßgabe der
+                             elektronischen Lohnsteuerabzugsmerkmale nach § 39e EStG oder der Eintragung auf der
+                             Bescheinigung für den Lohnsteuerabzug 2025 in Cent (ggf. 0)
      * <p>
      * @param {Big} JHINZU input value
      */
@@ -1047,14 +1093,14 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for JRE4.
      * <p>
-     *  Voraussichtlicher Jahresarbeitslohn ohne sonstige Bezüge (d.h. auch ohne
-                 die zu besteuernden Vorteile bei Vermögensbeteiligungen,
-                 § 19a Absatz 4 EStG) in Cent.
-                 Anmerkung: Die Eingabe dieses Feldes (ggf. 0) ist erforderlich bei Eingaben zu sonstigen
-                 Bezügen (Feld SONSTB).
-                 Sind in einem vorangegangenen Abrechnungszeitraum bereits sonstige Bezüge gezahlt worden,
-                 so sind sie dem voraussichtlichen Jahresarbeitslohn hinzuzurechnen. Gleiches gilt für zu
-                 besteuernde Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG).
+     *   Voraussichtlicher Jahresarbeitslohn ohne sonstige Bezüge (d.h. auch ohne
+                             die zu besteuernden Vorteile bei Vermögensbeteiligungen,
+                             § 19a Absatz 4 EStG) in Cent.
+                             Anmerkung: Die Eingabe dieses Feldes (ggf. 0) ist erforderlich bei Eingaben zu sonstigen
+                             Bezügen (Feld SONSTB).
+                             Sind in einem vorangegangenen Abrechnungszeitraum bereits sonstige Bezüge gezahlt worden,
+                             so sind sie dem voraussichtlichen Jahresarbeitslohn hinzuzurechnen. Gleiches gilt für zu
+                             besteuernde Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG).
      * <p>
      * @return the value
      */
@@ -1064,14 +1110,14 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for JRE4.
      * <p>
-     *  Voraussichtlicher Jahresarbeitslohn ohne sonstige Bezüge (d.h. auch ohne
-                 die zu besteuernden Vorteile bei Vermögensbeteiligungen,
-                 § 19a Absatz 4 EStG) in Cent.
-                 Anmerkung: Die Eingabe dieses Feldes (ggf. 0) ist erforderlich bei Eingaben zu sonstigen
-                 Bezügen (Feld SONSTB).
-                 Sind in einem vorangegangenen Abrechnungszeitraum bereits sonstige Bezüge gezahlt worden,
-                 so sind sie dem voraussichtlichen Jahresarbeitslohn hinzuzurechnen. Gleiches gilt für zu
-                 besteuernde Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG).
+     *   Voraussichtlicher Jahresarbeitslohn ohne sonstige Bezüge (d.h. auch ohne
+                             die zu besteuernden Vorteile bei Vermögensbeteiligungen,
+                             § 19a Absatz 4 EStG) in Cent.
+                             Anmerkung: Die Eingabe dieses Feldes (ggf. 0) ist erforderlich bei Eingaben zu sonstigen
+                             Bezügen (Feld SONSTB).
+                             Sind in einem vorangegangenen Abrechnungszeitraum bereits sonstige Bezüge gezahlt worden,
+                             so sind sie dem voraussichtlichen Jahresarbeitslohn hinzuzurechnen. Gleiches gilt für zu
+                             besteuernde Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG).
      * <p>
      * @param {Big} JRE4 input value
      */
@@ -1081,8 +1127,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for JRE4ENT.
      * <p>
-     *  In JRE4 enthaltene Entschädigungen nach § 24 Nummer 1 EStG und zu besteuernde
-                 Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG in Cent
+     *   In JRE4 enthaltene Entschädigungen nach § 24 Nummer 1 EStG und zu besteuernde
+                             Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG in Cent
      * <p>
      * @return the value
      */
@@ -1092,8 +1138,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for JRE4ENT.
      * <p>
-     *  In JRE4 enthaltene Entschädigungen nach § 24 Nummer 1 EStG und zu besteuernde
-                 Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG in Cent
+     *   In JRE4 enthaltene Entschädigungen nach § 24 Nummer 1 EStG und zu besteuernde
+                             Vorteile bei Vermögensbeteiligungen (§ 19a Absatz 4 EStG in Cent
      * <p>
      * @param {Big} JRE4ENT input value
      */
@@ -1103,7 +1149,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for JVBEZ.
      * <p>
-     *  In JRE4 enthaltene Versorgungsbezuege in Cents (ggf. 0)
+     *   In JRE4 enthaltene Versorgungsbezuege in Cents (ggf. 0)
      * <p>
      * @return the value
      */
@@ -1113,7 +1159,7 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for JVBEZ.
      * <p>
-     *  In JRE4 enthaltene Versorgungsbezuege in Cents (ggf. 0)
+     *   In JRE4 enthaltene Versorgungsbezuege in Cents (ggf. 0)
      * <p>
      * @param {Big} JVBEZ input value
      */
@@ -1123,13 +1169,13 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for KRV.
      * <p>
-     * Merker für die Vorsorgepauschale
-                0 = der Arbeitnehmer ist in der gesetzlichen Rentenversicherung oder einer
-                berufsständischen Versorgungseinrichtung pflichtversichert oder bei Befreiung von der
-                Versicherungspflicht freiwillig versichert; es gilt die allgemeine Beitragsbemessungsgrenze
-                
-                1 = wenn nicht 0
-                 
+     *  Merker für die Vorsorgepauschale
+                            0 = der Arbeitnehmer ist in der gesetzlichen Rentenversicherung oder einer
+                            berufsständischen Versorgungseinrichtung pflichtversichert oder bei Befreiung von der
+                            Versicherungspflicht freiwillig versichert; es gilt die allgemeine Beitragsbemessungsgrenze
+
+                            1 = wenn nicht 0
+                              
      * <p>
      * @return the value
      */
@@ -1139,13 +1185,13 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for KRV.
      * <p>
-     * Merker für die Vorsorgepauschale
-                0 = der Arbeitnehmer ist in der gesetzlichen Rentenversicherung oder einer
-                berufsständischen Versorgungseinrichtung pflichtversichert oder bei Befreiung von der
-                Versicherungspflicht freiwillig versichert; es gilt die allgemeine Beitragsbemessungsgrenze
-                
-                1 = wenn nicht 0
-                 
+     *  Merker für die Vorsorgepauschale
+                            0 = der Arbeitnehmer ist in der gesetzlichen Rentenversicherung oder einer
+                            berufsständischen Versorgungseinrichtung pflichtversichert oder bei Befreiung von der
+                            Versicherungspflicht freiwillig versichert; es gilt die allgemeine Beitragsbemessungsgrenze
+
+                            1 = wenn nicht 0
+                              
      * <p>
      * @param {number} KRV input value
      */
@@ -1155,10 +1201,10 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for KVZ.
      * <p>
-     *  Kassenindividueller Zusatzbeitragssatz bei einem gesetzlich krankenversicherten Arbeitnehmer
-             in Prozent (bspw. 2,50 für 2,50 %) mit 2 Dezimalstellen.
-             Es ist der volle Zusatzbeitragssatz anzugeben. Die Aufteilung in Arbeitnehmer- und Arbeitgeber-
-             anteil erfolgt im Programmablauf.
+     *   Kassenindividueller Zusatzbeitragssatz bei einem gesetzlich krankenversicherten Arbeitnehmer
+                         in Prozent (bspw. 2,50 für 2,50 %) mit 2 Dezimalstellen.
+                         Es ist der volle Zusatzbeitragssatz anzugeben. Die Aufteilung in Arbeitnehmer- und Arbeitgeber-
+                         anteil erfolgt im Programmablauf.
      * <p>
      * @return the value
      */
@@ -1168,10 +1214,10 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for KVZ.
      * <p>
-     *  Kassenindividueller Zusatzbeitragssatz bei einem gesetzlich krankenversicherten Arbeitnehmer
-             in Prozent (bspw. 2,50 für 2,50 %) mit 2 Dezimalstellen.
-             Es ist der volle Zusatzbeitragssatz anzugeben. Die Aufteilung in Arbeitnehmer- und Arbeitgeber-
-             anteil erfolgt im Programmablauf.
+     *   Kassenindividueller Zusatzbeitragssatz bei einem gesetzlich krankenversicherten Arbeitnehmer
+                         in Prozent (bspw. 2,50 für 2,50 %) mit 2 Dezimalstellen.
+                         Es ist der volle Zusatzbeitragssatz anzugeben. Die Aufteilung in Arbeitnehmer- und Arbeitgeber-
+                         anteil erfolgt im Programmablauf.
      * <p>
      * @param {Big} KVZ input value
      */
@@ -1181,11 +1227,11 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for LZZ.
      * <p>
-     *  Lohnzahlungszeitraum:
-                 1 = Jahr
-                 2 = Monat
-                 3 = Woche
-                 4 = Tag
+     *   Lohnzahlungszeitraum:
+                             1 = Jahr
+                             2 = Monat
+                             3 = Woche
+                             4 = Tag
      * <p>
      * @return the value
      */
@@ -1195,11 +1241,11 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for LZZ.
      * <p>
-     *  Lohnzahlungszeitraum:
-                 1 = Jahr
-                 2 = Monat
-                 3 = Woche
-                 4 = Tag
+     *   Lohnzahlungszeitraum:
+                             1 = Jahr
+                             2 = Monat
+                             3 = Woche
+                             4 = Tag
      * <p>
      * @param {number} LZZ input value
      */
@@ -1209,9 +1255,9 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for LZZFREIB.
      * <p>
-     *  Der als elektronisches Lohnsteuerabzugsmerkmal für den Arbeitgeber nach § 39e EStG festgestellte
-                 oder in der Bescheinigung für den Lohnsteuerabzug 2025 eingetragene Freibetrag für den
-                 Lohnzahlungszeitraum in Cent
+     *   Der als elektronisches Lohnsteuerabzugsmerkmal für den Arbeitgeber nach § 39e EStG festgestellte
+                             oder in der Bescheinigung für den Lohnsteuerabzug 2025 eingetragene Freibetrag für den
+                             Lohnzahlungszeitraum in Cent
      * <p>
      * @return the value
      */
@@ -1221,9 +1267,9 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for LZZFREIB.
      * <p>
-     *  Der als elektronisches Lohnsteuerabzugsmerkmal für den Arbeitgeber nach § 39e EStG festgestellte
-                 oder in der Bescheinigung für den Lohnsteuerabzug 2025 eingetragene Freibetrag für den
-                 Lohnzahlungszeitraum in Cent
+     *   Der als elektronisches Lohnsteuerabzugsmerkmal für den Arbeitgeber nach § 39e EStG festgestellte
+                             oder in der Bescheinigung für den Lohnsteuerabzug 2025 eingetragene Freibetrag für den
+                             Lohnzahlungszeitraum in Cent
      * <p>
      * @param {Big} LZZFREIB input value
      */
@@ -1233,9 +1279,9 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for LZZHINZU.
      * <p>
-     *  Der als elektronisches Lohnsteuerabzugsmerkmal für den Arbeitgeber nach § 39e EStG festgestellte
-                 oder in der Bescheinigung für den Lohnsteuerabzug 2025 eingetragene Hinzurechnungsbetrag für den
-                 Lohnzahlungszeitraum in Cent
+     *   Der als elektronisches Lohnsteuerabzugsmerkmal für den Arbeitgeber nach § 39e EStG festgestellte
+                             oder in der Bescheinigung für den Lohnsteuerabzug 2025 eingetragene Hinzurechnungsbetrag für den
+                             Lohnzahlungszeitraum in Cent
      * <p>
      * @return the value
      */
@@ -1245,9 +1291,9 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for LZZHINZU.
      * <p>
-     *  Der als elektronisches Lohnsteuerabzugsmerkmal für den Arbeitgeber nach § 39e EStG festgestellte
-                 oder in der Bescheinigung für den Lohnsteuerabzug 2025 eingetragene Hinzurechnungsbetrag für den
-                 Lohnzahlungszeitraum in Cent
+     *   Der als elektronisches Lohnsteuerabzugsmerkmal für den Arbeitgeber nach § 39e EStG festgestellte
+                             oder in der Bescheinigung für den Lohnsteuerabzug 2025 eingetragene Hinzurechnungsbetrag für den
+                             Lohnzahlungszeitraum in Cent
      * <p>
      * @param {Big} LZZHINZU input value
      */
@@ -1257,8 +1303,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for MBV.
      * <p>
-     *  Nicht zu besteuernde Vorteile bei Vermögensbeteiligungen
-                 (§ 19a Absatz 1 Satz 4 EStG) in Cent
+     *   Nicht zu besteuernde Vorteile bei Vermögensbeteiligungen
+                             (§ 19a Absatz 1 Satz 4 EStG) in Cent
      * <p>
      * @return the value
      */
@@ -1268,8 +1314,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for MBV.
      * <p>
-     *  Nicht zu besteuernde Vorteile bei Vermögensbeteiligungen
-                 (§ 19a Absatz 1 Satz 4 EStG) in Cent
+     *   Nicht zu besteuernde Vorteile bei Vermögensbeteiligungen
+                             (§ 19a Absatz 1 Satz 4 EStG) in Cent
      * <p>
      * @param {Big} MBV input value
      */
@@ -1279,10 +1325,10 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for PKPV.
      * <p>
-     *  Dem Arbeitgeber mitgeteilte Zahlungen des Arbeitnehmers zur privaten
-                 Kranken- bzw. Pflegeversicherung im Sinne des §10 Abs. 1 Nr. 3 EStG 2010
-                 als Monatsbetrag in Cent (der Wert ist inabhängig vom Lohnzahlungszeitraum immer
-                 als Monatsbetrag anzugeben).
+     *   Dem Arbeitgeber mitgeteilte Zahlungen des Arbeitnehmers zur privaten
+                             Kranken- bzw. Pflegeversicherung im Sinne des §10 Abs. 1 Nr. 3 EStG 2010
+                             als Monatsbetrag in Cent (der Wert ist inabhängig vom Lohnzahlungszeitraum immer
+                             als Monatsbetrag anzugeben).
      * <p>
      * @return the value
      */
@@ -1292,10 +1338,10 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for PKPV.
      * <p>
-     *  Dem Arbeitgeber mitgeteilte Zahlungen des Arbeitnehmers zur privaten
-                 Kranken- bzw. Pflegeversicherung im Sinne des §10 Abs. 1 Nr. 3 EStG 2010
-                 als Monatsbetrag in Cent (der Wert ist inabhängig vom Lohnzahlungszeitraum immer
-                 als Monatsbetrag anzugeben).
+     *   Dem Arbeitgeber mitgeteilte Zahlungen des Arbeitnehmers zur privaten
+                             Kranken- bzw. Pflegeversicherung im Sinne des §10 Abs. 1 Nr. 3 EStG 2010
+                             als Monatsbetrag in Cent (der Wert ist inabhängig vom Lohnzahlungszeitraum immer
+                             als Monatsbetrag anzugeben).
      * <p>
      * @param {Big} PKPV input value
      */
@@ -1305,10 +1351,10 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for PKV.
      * <p>
-     *  Krankenversicherung:
-                 0 = gesetzlich krankenversicherte Arbeitnehmer
-                 1 = ausschließlich privat krankenversicherte Arbeitnehmer OHNE Arbeitgeberzuschuss
-                 2 = ausschließlich privat krankenversicherte Arbeitnehmer MIT Arbeitgeberzuschuss
+     *   Krankenversicherung:
+                             0 = gesetzlich krankenversicherte Arbeitnehmer
+                             1 = ausschließlich privat krankenversicherte Arbeitnehmer OHNE Arbeitgeberzuschuss
+                             2 = ausschließlich privat krankenversicherte Arbeitnehmer MIT Arbeitgeberzuschuss
      * <p>
      * @return the value
      */
@@ -1318,10 +1364,10 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for PKV.
      * <p>
-     *  Krankenversicherung:
-                 0 = gesetzlich krankenversicherte Arbeitnehmer
-                 1 = ausschließlich privat krankenversicherte Arbeitnehmer OHNE Arbeitgeberzuschuss
-                 2 = ausschließlich privat krankenversicherte Arbeitnehmer MIT Arbeitgeberzuschuss
+     *   Krankenversicherung:
+                             0 = gesetzlich krankenversicherte Arbeitnehmer
+                             1 = ausschließlich privat krankenversicherte Arbeitnehmer OHNE Arbeitgeberzuschuss
+                             2 = ausschließlich privat krankenversicherte Arbeitnehmer MIT Arbeitgeberzuschuss
      * <p>
      * @param {number} PKV input value
      */
@@ -1331,13 +1377,13 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for PVA.
      * <p>
-     *  Zahl der beim Arbeitnehmer zu berücksichtigenden Beitragsabschläge in der sozialen Pflegeversicherung
-                 bei mehr als einem Kind
-                 0 = kein Abschlag
-                 1 = Beitragsabschlag für das 2. Kind
-                 2 = Beitragsabschläge für das 2. und 3. Kind
-                 3 = Beitragsabschläge für 2. bis 4. Kinder
-                 4 = Beitragsabschläge für 2. bis 5. oder mehr Kinder
+     *   Zahl der beim Arbeitnehmer zu berücksichtigenden Beitragsabschläge in der sozialen Pflegeversicherung
+                             bei mehr als einem Kind
+                             0 = kein Abschlag
+                             1 = Beitragsabschlag für das 2. Kind
+                             2 = Beitragsabschläge für das 2. und 3. Kind
+                             3 = Beitragsabschläge für 2. bis 4. Kinder
+                             4 = Beitragsabschläge für 2. bis 5. oder mehr Kinder
      * <p>
      * @return the value
      */
@@ -1347,13 +1393,13 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for PVA.
      * <p>
-     *  Zahl der beim Arbeitnehmer zu berücksichtigenden Beitragsabschläge in der sozialen Pflegeversicherung
-                 bei mehr als einem Kind
-                 0 = kein Abschlag
-                 1 = Beitragsabschlag für das 2. Kind
-                 2 = Beitragsabschläge für das 2. und 3. Kind
-                 3 = Beitragsabschläge für 2. bis 4. Kinder
-                 4 = Beitragsabschläge für 2. bis 5. oder mehr Kinder
+     *   Zahl der beim Arbeitnehmer zu berücksichtigenden Beitragsabschläge in der sozialen Pflegeversicherung
+                             bei mehr als einem Kind
+                             0 = kein Abschlag
+                             1 = Beitragsabschlag für das 2. Kind
+                             2 = Beitragsabschläge für das 2. und 3. Kind
+                             3 = Beitragsabschläge für 2. bis 4. Kinder
+                             4 = Beitragsabschläge für 2. bis 5. oder mehr Kinder
      * <p>
      * @param {Big} PVA input value
      */
@@ -1363,8 +1409,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for PVS.
      * <p>
-     *  1, wenn bei der sozialen Pflegeversicherung die Besonderheiten in Sachsen zu berücksichtigen sind bzw.
-                    zu berücksichtigen wären, sonst 0.
+     *   1, wenn bei der sozialen Pflegeversicherung die Besonderheiten in Sachsen zu berücksichtigen sind bzw.
+                                 zu berücksichtigen wären, sonst 0.
      * <p>
      * @return the value
      */
@@ -1374,8 +1420,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for PVS.
      * <p>
-     *  1, wenn bei der sozialen Pflegeversicherung die Besonderheiten in Sachsen zu berücksichtigen sind bzw.
-                    zu berücksichtigen wären, sonst 0.
+     *   1, wenn bei der sozialen Pflegeversicherung die Besonderheiten in Sachsen zu berücksichtigen sind bzw.
+                                 zu berücksichtigen wären, sonst 0.
      * <p>
      * @param {number} PVS input value
      */
@@ -1385,8 +1431,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for PVZ.
      * <p>
-     *  1, wenn er der Arbeitnehmer den Zuschlag zur sozialen Pflegeversicherung
-                    zu zahlen hat, sonst 0.
+     *   1, wenn er der Arbeitnehmer den Zuschlag zur sozialen Pflegeversicherung
+                                 zu zahlen hat, sonst 0.
      * <p>
      * @return the value
      */
@@ -1396,8 +1442,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for PVZ.
      * <p>
-     *  1, wenn er der Arbeitnehmer den Zuschlag zur sozialen Pflegeversicherung
-                    zu zahlen hat, sonst 0.
+     *   1, wenn er der Arbeitnehmer den Zuschlag zur sozialen Pflegeversicherung
+                                 zu zahlen hat, sonst 0.
      * <p>
      * @param {number} PVZ input value
      */
@@ -1407,8 +1453,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for R.
      * <p>
-     *  Religionsgemeinschaft des Arbeitnehmers lt. elektronischer Lohnsteuerabzugsmerkmale oder der
-                 Bescheinigung für den Lohnsteuerabzug 2025 (bei keiner Religionszugehörigkeit = 0)
+     *   Religionsgemeinschaft des Arbeitnehmers lt. elektronischer Lohnsteuerabzugsmerkmale oder der
+                             Bescheinigung für den Lohnsteuerabzug 2025 (bei keiner Religionszugehörigkeit = 0)
      * <p>
      * @return the value
      */
@@ -1418,8 +1464,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for R.
      * <p>
-     *  Religionsgemeinschaft des Arbeitnehmers lt. elektronischer Lohnsteuerabzugsmerkmale oder der
-                 Bescheinigung für den Lohnsteuerabzug 2025 (bei keiner Religionszugehörigkeit = 0)
+     *   Religionsgemeinschaft des Arbeitnehmers lt. elektronischer Lohnsteuerabzugsmerkmale oder der
+                             Bescheinigung für den Lohnsteuerabzug 2025 (bei keiner Religionszugehörigkeit = 0)
      * <p>
      * @param {number} R input value
      */
@@ -1429,11 +1475,11 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for RE4.
      * <p>
-     *  Steuerpflichtiger Arbeitslohn für den Lohnzahlungszeitraum vor Berücksichtigung des
-                 Versorgungsfreibetrags und des Zuschlags zum Versorgungsfreibetrag, des Altersentlastungsbetrags
-                 und des als elektronisches Lohnsteuerabzugsmerkmal festgestellten oder in der Bescheinigung für
-                 den Lohnsteuerabzug 2025 für den Lohnzahlungszeitraum eingetragenen Freibetrags bzw.
-                 Hinzurechnungsbetrags in Cent
+     *   Steuerpflichtiger Arbeitslohn für den Lohnzahlungszeitraum vor Berücksichtigung des
+                             Versorgungsfreibetrags und des Zuschlags zum Versorgungsfreibetrag, des Altersentlastungsbetrags
+                             und des als elektronisches Lohnsteuerabzugsmerkmal festgestellten oder in der Bescheinigung für
+                             den Lohnsteuerabzug 2025 für den Lohnzahlungszeitraum eingetragenen Freibetrags bzw.
+                             Hinzurechnungsbetrags in Cent
      * <p>
      * @return the value
      */
@@ -1443,11 +1489,11 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for RE4.
      * <p>
-     *  Steuerpflichtiger Arbeitslohn für den Lohnzahlungszeitraum vor Berücksichtigung des
-                 Versorgungsfreibetrags und des Zuschlags zum Versorgungsfreibetrag, des Altersentlastungsbetrags
-                 und des als elektronisches Lohnsteuerabzugsmerkmal festgestellten oder in der Bescheinigung für
-                 den Lohnsteuerabzug 2025 für den Lohnzahlungszeitraum eingetragenen Freibetrags bzw.
-                 Hinzurechnungsbetrags in Cent
+     *   Steuerpflichtiger Arbeitslohn für den Lohnzahlungszeitraum vor Berücksichtigung des
+                             Versorgungsfreibetrags und des Zuschlags zum Versorgungsfreibetrag, des Altersentlastungsbetrags
+                             und des als elektronisches Lohnsteuerabzugsmerkmal festgestellten oder in der Bescheinigung für
+                             den Lohnsteuerabzug 2025 für den Lohnzahlungszeitraum eingetragenen Freibetrags bzw.
+                             Hinzurechnungsbetrags in Cent
      * <p>
      * @param {Big} RE4 input value
      */
@@ -1457,8 +1503,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for SONSTB.
      * <p>
-     *  Sonstige Bezüge einschließlich zu besteuernde Vorteile bei Vermögensbeteiligungen und Sterbegeld bei Versorgungsbezügen sowie
-                 Kapitalauszahlungen/Abfindungen, in Cent (ggf. 0)
+     *   Sonstige Bezüge einschließlich zu besteuernde Vorteile bei Vermögensbeteiligungen und Sterbegeld bei Versorgungsbezügen sowie
+                             Kapitalauszahlungen/Abfindungen, in Cent (ggf. 0)
      * <p>
      * @return the value
      */
@@ -1468,8 +1514,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for SONSTB.
      * <p>
-     *  Sonstige Bezüge einschließlich zu besteuernde Vorteile bei Vermögensbeteiligungen und Sterbegeld bei Versorgungsbezügen sowie
-                 Kapitalauszahlungen/Abfindungen, in Cent (ggf. 0)
+     *   Sonstige Bezüge einschließlich zu besteuernde Vorteile bei Vermögensbeteiligungen und Sterbegeld bei Versorgungsbezügen sowie
+                             Kapitalauszahlungen/Abfindungen, in Cent (ggf. 0)
      * <p>
      * @param {Big} SONSTB input value
      */
@@ -1479,7 +1525,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for SONSTENT.
      * <p>
-     *  In SONSTB enthaltene Entschädigungen nach § 24 Nummer 1 EStG
+     *   In SONSTB enthaltene Entschädigungen nach § 24 Nummer 1 EStG
      * <p>
      * @return the value
      */
@@ -1489,7 +1535,7 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for SONSTENT.
      * <p>
-     *  In SONSTB enthaltene Entschädigungen nach § 24 Nummer 1 EStG
+     *   In SONSTB enthaltene Entschädigungen nach § 24 Nummer 1 EStG
      * <p>
      * @param {Big} SONSTENT input value
      */
@@ -1499,8 +1545,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for STERBE.
      * <p>
-     *  Sterbegeld bei Versorgungsbezuegen sowie Kapitalauszahlungen/Abfindungen,
-                  (in SONSTB enthalten) in Cent
+     *   Sterbegeld bei Versorgungsbezuegen sowie Kapitalauszahlungen/Abfindungen,
+                              (in SONSTB enthalten) in Cent
      * <p>
      * @return the value
      */
@@ -1510,8 +1556,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for STERBE.
      * <p>
-     *  Sterbegeld bei Versorgungsbezuegen sowie Kapitalauszahlungen/Abfindungen,
-                  (in SONSTB enthalten) in Cent
+     *   Sterbegeld bei Versorgungsbezuegen sowie Kapitalauszahlungen/Abfindungen,
+                              (in SONSTB enthalten) in Cent
      * <p>
      * @param {Big} STERBE input value
      */
@@ -1521,13 +1567,13 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for STKL.
      * <p>
-     *  Steuerklasse:
-                 1 = I
-                 2 = II
-                 3 = III
-                 4 = IV
-                 5 = V
-                 6 = VI
+     *   Steuerklasse:
+                             1 = I
+                             2 = II
+                             3 = III
+                             4 = IV
+                             5 = V
+                             6 = VI
      * <p>
      * @return the value
      */
@@ -1537,13 +1583,13 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for STKL.
      * <p>
-     *  Steuerklasse:
-                 1 = I
-                 2 = II
-                 3 = III
-                 4 = IV
-                 5 = V
-                 6 = VI
+     *   Steuerklasse:
+                             1 = I
+                             2 = II
+                             3 = III
+                             4 = IV
+                             5 = V
+                             6 = VI
      * <p>
      * @param {number} STKL input value
      */
@@ -1553,7 +1599,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VBEZ.
      * <p>
-     *  In RE4 enthaltene Versorgungsbezuege in Cents (ggf. 0)
+     *   In RE4 enthaltene Versorgungsbezuege in Cents (ggf. 0)
      * <p>
      * @return the value
      */
@@ -1563,7 +1609,7 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for VBEZ.
      * <p>
-     *  In RE4 enthaltene Versorgungsbezuege in Cents (ggf. 0)
+     *   In RE4 enthaltene Versorgungsbezuege in Cents (ggf. 0)
      * <p>
      * @param {Big} VBEZ input value
      */
@@ -1573,8 +1619,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VBEZM.
      * <p>
-     *  Vorsorgungsbezug im Januar 2005 bzw. fuer den ersten vollen Monat
-                 in Cents
+     *   Vorsorgungsbezug im Januar 2005 bzw. fuer den ersten vollen Monat
+                             in Cents
      * <p>
      * @return the value
      */
@@ -1584,8 +1630,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for VBEZM.
      * <p>
-     *  Vorsorgungsbezug im Januar 2005 bzw. fuer den ersten vollen Monat
-                 in Cents
+     *   Vorsorgungsbezug im Januar 2005 bzw. fuer den ersten vollen Monat
+                             in Cents
      * <p>
      * @param {Big} VBEZM input value
      */
@@ -1595,9 +1641,9 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VBEZS.
      * <p>
-     *  Voraussichtliche Sonderzahlungen im Kalenderjahr des Versorgungsbeginns
-                 bei Versorgungsempfaengern ohne Sterbegeld, Kapitalauszahlungen/Abfindungen
-                 bei Versorgungsbezuegen in Cents
+     *   Voraussichtliche Sonderzahlungen im Kalenderjahr des Versorgungsbeginns
+                             bei Versorgungsempfaengern ohne Sterbegeld, Kapitalauszahlungen/Abfindungen
+                             bei Versorgungsbezuegen in Cents
      * <p>
      * @return the value
      */
@@ -1607,9 +1653,9 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for VBEZS.
      * <p>
-     *  Voraussichtliche Sonderzahlungen im Kalenderjahr des Versorgungsbeginns
-                 bei Versorgungsempfaengern ohne Sterbegeld, Kapitalauszahlungen/Abfindungen
-                 bei Versorgungsbezuegen in Cents
+     *   Voraussichtliche Sonderzahlungen im Kalenderjahr des Versorgungsbeginns
+                             bei Versorgungsempfaengern ohne Sterbegeld, Kapitalauszahlungen/Abfindungen
+                             bei Versorgungsbezuegen in Cents
      * <p>
      * @param {Big} VBEZS input value
      */
@@ -1619,8 +1665,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VBS.
      * <p>
-     *  In SONSTB enthaltene Versorgungsbezuege einschliesslich Sterbegeld
-                in Cents (ggf. 0)
+     *   In SONSTB enthaltene Versorgungsbezuege einschliesslich Sterbegeld
+                            in Cents (ggf. 0)
      * <p>
      * @return the value
      */
@@ -1630,8 +1676,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for VBS.
      * <p>
-     *  In SONSTB enthaltene Versorgungsbezuege einschliesslich Sterbegeld
-                in Cents (ggf. 0)
+     *   In SONSTB enthaltene Versorgungsbezuege einschliesslich Sterbegeld
+                            in Cents (ggf. 0)
      * <p>
      * @param {Big} VBS input value
      */
@@ -1641,8 +1687,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VJAHR.
      * <p>
-     *  Jahr, in dem der Versorgungsbezug erstmalig gewaehrt wurde; werden
-                 mehrere Versorgungsbezuege gezahlt, so gilt der aelteste erstmalige Bezug
+     *   Jahr, in dem der Versorgungsbezug erstmalig gewaehrt wurde; werden
+                             mehrere Versorgungsbezuege gezahlt, so gilt der aelteste erstmalige Bezug
      * <p>
      * @return the value
      */
@@ -1652,8 +1698,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for VJAHR.
      * <p>
-     *  Jahr, in dem der Versorgungsbezug erstmalig gewaehrt wurde; werden
-                 mehrere Versorgungsbezuege gezahlt, so gilt der aelteste erstmalige Bezug
+     *   Jahr, in dem der Versorgungsbezug erstmalig gewaehrt wurde; werden
+                             mehrere Versorgungsbezuege gezahlt, so gilt der aelteste erstmalige Bezug
      * <p>
      * @param {number} VJAHR input value
      */
@@ -1663,8 +1709,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for ZKF.
      * <p>
-     *  Zahl der Freibetraege fuer Kinder (eine Dezimalstelle, nur bei Steuerklassen
-                 I, II, III und IV)
+     *   Zahl der Freibetraege fuer Kinder (eine Dezimalstelle, nur bei Steuerklassen
+                             I, II, III und IV)
      * <p>
      * @return the value
      */
@@ -1674,8 +1720,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for ZKF.
      * <p>
-     *  Zahl der Freibetraege fuer Kinder (eine Dezimalstelle, nur bei Steuerklassen
-                 I, II, III und IV)
+     *   Zahl der Freibetraege fuer Kinder (eine Dezimalstelle, nur bei Steuerklassen
+                             I, II, III und IV)
      * <p>
      * @param {Big} ZKF input value
      */
@@ -1685,8 +1731,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for ZMVB.
      * <p>
-     *  Zahl der Monate, fuer die Versorgungsbezuege gezahlt werden (nur
-                 erforderlich bei Jahresberechnung (LZZ = 1)
+     *   Zahl der Monate, fuer die Versorgungsbezuege gezahlt werden (nur
+                             erforderlich bei Jahresberechnung (LZZ = 1)
      * <p>
      * @return the value
      */
@@ -1696,8 +1742,8 @@ export class Lohnsteuer2025Big {
     /**
      * Setter for ZMVB.
      * <p>
-     *  Zahl der Monate, fuer die Versorgungsbezuege gezahlt werden (nur
-                 erforderlich bei Jahresberechnung (LZZ = 1)
+     *   Zahl der Monate, fuer die Versorgungsbezuege gezahlt werden (nur
+                             erforderlich bei Jahresberechnung (LZZ = 1)
      * <p>
      * @param {number} ZMVB input value
      */
@@ -1707,7 +1753,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for BK.
      * <p>
-     *  Bemessungsgrundlage fuer die Kirchenlohnsteuer in Cents
+     *   Bemessungsgrundlage fuer die Kirchenlohnsteuer in Cents
      * <p>
      * @return the value
      */
@@ -1717,11 +1763,11 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for BKS.
      * <p>
-     *  Bemessungsgrundlage der sonstigen Bezüge  für die Kirchenlohnsteuer in Cent.
-                 Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei
-                 Vermögensbeteiligungen (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern BK
-                 (maximal bis 0). Der Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen
-                 im Rahmen der Veranlagung zur Einkommensteuer bleibt unberührt.
+     *   Bemessungsgrundlage der sonstigen Bezüge  für die Kirchenlohnsteuer in Cent.
+                             Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei
+                             Vermögensbeteiligungen (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern BK
+                             (maximal bis 0). Der Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen
+                             im Rahmen der Veranlagung zur Einkommensteuer bleibt unberührt.
      * <p>
      * @return the value
      */
@@ -1731,7 +1777,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for LSTLZZ.
      * <p>
-     *  Fuer den Lohnzahlungszeitraum einzubehaltende Lohnsteuer in Cents
+     *   Fuer den Lohnzahlungszeitraum einzubehaltende Lohnsteuer in Cents
      * <p>
      * @return the value
      */
@@ -1741,8 +1787,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for SOLZLZZ.
      * <p>
-     *  Fuer den Lohnzahlungszeitraum einzubehaltender Solidaritaetszuschlag
-                 in Cents
+     *   Fuer den Lohnzahlungszeitraum einzubehaltender Solidaritaetszuschlag
+                             in Cents
      * <p>
      * @return the value
      */
@@ -1752,11 +1798,11 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for SOLZS.
      * <p>
-     *  Solidaritätszuschlag für sonstige Bezüge (ohne Vergütung für mehrjährige Tätigkeit in Cent.
-                 Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei Vermögensbeteiligungen
-                 (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern SOLZLZZ (maximal bis 0). Der
-                 Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen im Rahmen der
-                 Veranlagung zur Einkommensteuer bleibt unberührt.
+     *   Solidaritätszuschlag für sonstige Bezüge (ohne Vergütung für mehrjährige Tätigkeit in Cent.
+                             Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei Vermögensbeteiligungen
+                             (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern SOLZLZZ (maximal bis 0). Der
+                             Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen im Rahmen der
+                             Veranlagung zur Einkommensteuer bleibt unberührt.
      * <p>
      * @return the value
      */
@@ -1766,11 +1812,11 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for STS.
      * <p>
-     *  Lohnsteuer für sonstige Bezüge in Cent
-                 Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei Vermögensbeteiligungen
-                 (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern LSTLZZ (maximal bis 0). Der
-                 Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen im Rahmen der
-                 Veranlagung zur Einkommensteuer bleibt unberührt.
+     *   Lohnsteuer für sonstige Bezüge in Cent
+                             Hinweis: Negativbeträge, die aus nicht zu besteuernden Vorteilen bei Vermögensbeteiligungen
+                             (§ 19a Absatz 1 Satz 4 EStG) resultieren, mindern LSTLZZ (maximal bis 0). Der
+                             Sonderausgabenabzug für tatsächlich erbrachte Vorsorgeaufwendungen im Rahmen der
+                             Veranlagung zur Einkommensteuer bleibt unberührt.
      * <p>
      * @return the value
      */
@@ -1780,12 +1826,12 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VKVLZZ.
      * <p>
-     *  Für den Lohnzahlungszeitraum berücksichtigte Beiträge des Arbeitnehmers zur
-                 privaten Basis-Krankenversicherung und privaten Pflege-Pflichtversicherung (ggf. auch
-                 die Mindestvorsorgepauschale) in Cent beim laufenden Arbeitslohn. Für Zwecke der Lohn-
-                 steuerbescheinigung sind die einzelnen Ausgabewerte außerhalb des eigentlichen Lohn-
-                 steuerbescheinigungsprogramms zu addieren; hinzuzurechnen sind auch die Ausgabewerte
-                 VKVSONST
+     *   Für den Lohnzahlungszeitraum berücksichtigte Beiträge des Arbeitnehmers zur
+                             privaten Basis-Krankenversicherung und privaten Pflege-Pflichtversicherung (ggf. auch
+                             die Mindestvorsorgepauschale) in Cent beim laufenden Arbeitslohn. Für Zwecke der Lohn-
+                             steuerbescheinigung sind die einzelnen Ausgabewerte außerhalb des eigentlichen Lohn-
+                             steuerbescheinigungsprogramms zu addieren; hinzuzurechnen sind auch die Ausgabewerte
+                             VKVSONST
      * <p>
      * @return the value
      */
@@ -1795,10 +1841,10 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VKVSONST.
      * <p>
-     *  Für den Lohnzahlungszeitraum berücksichtigte Beiträge des Arbeitnehmers
-                 zur privaten Basis-Krankenversicherung und privaten Pflege-Pflichtversicherung (ggf.
-                 auch die Mindestvorsorgepauschale) in Cent bei sonstigen Bezügen. Der Ausgabewert kann
-                 auch negativ sein.
+     *   Für den Lohnzahlungszeitraum berücksichtigte Beiträge des Arbeitnehmers
+                             zur privaten Basis-Krankenversicherung und privaten Pflege-Pflichtversicherung (ggf.
+                             auch die Mindestvorsorgepauschale) in Cent bei sonstigen Bezügen. Der Ausgabewert kann
+                             auch negativ sein.
      * <p>
      * @return the value
      */
@@ -1808,7 +1854,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VFRB.
      * <p>
-     *  Verbrauchter Freibetrag bei Berechnung des laufenden Arbeitslohns, in Cent
+     *   Verbrauchter Freibetrag bei Berechnung des laufenden Arbeitslohns, in Cent
      * <p>
      * @return the value
      */
@@ -1818,7 +1864,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VFRBS1.
      * <p>
-     *  Verbrauchter Freibetrag bei Berechnung des voraussichtlichen Jahresarbeitslohns, in Cent
+     *   Verbrauchter Freibetrag bei Berechnung des voraussichtlichen Jahresarbeitslohns, in Cent
      * <p>
      * @return the value
      */
@@ -1828,7 +1874,7 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for VFRBS2.
      * <p>
-     *  Verbrauchter Freibetrag bei Berechnung der sonstigen Bezüge, in Cent
+     *   Verbrauchter Freibetrag bei Berechnung der sonstigen Bezüge, in Cent
      * <p>
      * @return the value
      */
@@ -1838,8 +1884,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for WVFRB.
      * <p>
-     *  Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE über
-                dem Grundfreibetrag bei der Berechnung des laufenden Arbeitslohns, in Cent
+     *   Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE über
+                            dem Grundfreibetrag bei der Berechnung des laufenden Arbeitslohns, in Cent
      * <p>
      * @return the value
      */
@@ -1849,8 +1895,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for WVFRBO.
      * <p>
-     *  Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE über dem Grundfreibetrag
-                bei der Berechnung des voraussichtlichen Jahresarbeitslohns, in Cent
+     *   Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE über dem Grundfreibetrag
+                            bei der Berechnung des voraussichtlichen Jahresarbeitslohns, in Cent
      * <p>
      * @return the value
      */
@@ -1860,8 +1906,8 @@ export class Lohnsteuer2025Big {
     /**
      * Getter for WVFRBM.
      * <p>
-     *  Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE
-                über dem Grundfreibetrag bei der Berechnung der sonstigen Bezüge, in Cent
+     *   Für die weitergehende Berücksichtigung des Steuerfreibetrags nach dem DBA Türkei verfügbares ZVE
+                            über dem Grundfreibetrag bei der Berechnung der sonstigen Bezüge, in Cent
      * <p>
      * @return the value
      */
@@ -1913,7 +1959,7 @@ export class Lohnsteuer2025Big {
      * Get all fields with types.
      */
     getDirectory() {
-        return Lohnsteuer2025Big.typeDirectory;
+        return Lohnsteuer2025.typeDirectory;
     }
     /**
      * Converts a value (number or Big) in the correct type (number or Big).
@@ -1922,7 +1968,7 @@ export class Lohnsteuer2025Big {
      * @param {TaxJsValueType} value the value to convert
      */
     toType(name, value) {
-        const info = Lohnsteuer2025Big.typeDirectory[name];
+        const info = Lohnsteuer2025.typeDirectory[name];
         if (!info) {
             throw new Error("Unknown parameter " + name);
         }
@@ -1935,13 +1981,13 @@ export class Lohnsteuer2025Big {
         return value;
     }
 }
-Lohnsteuer2025Big._n = "number";
-Lohnsteuer2025Big._b = "Big";
-Lohnsteuer2025Big._i = "input";
-Lohnsteuer2025Big._o = "output";
-Lohnsteuer2025Big._s = "STANDARD";
-Lohnsteuer2025Big._d = "DBA";
-Lohnsteuer2025Big.typeDirectory = {
-    "af": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "AJAHR": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "ALTER1": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "f": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "JFREIB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JHINZU": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JRE4": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JRE4ENT": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "JVBEZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "KRV": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "KVZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "LZZ": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "LZZFREIB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "LZZHINZU": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "MBV": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PKPV": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PKV": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "PVA": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "PVS": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "PVZ": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "R": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "RE4": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "SONSTB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "SONSTENT": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "STERBE": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "STKL": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "VBEZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBEZM": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBEZS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VBS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "VJAHR": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "ZKF": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._i }, "ZMVB": { type: Lohnsteuer2025Big._n, direction: Lohnsteuer2025Big._i }, "BK": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "BKS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "LSTLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "SOLZLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "SOLZS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "STS": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VKVLZZ": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VKVSONST": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._s }, "VFRB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "VFRBS1": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "VFRBS2": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRB": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRBO": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d }, "WVFRBM": { type: Lohnsteuer2025Big._b, direction: Lohnsteuer2025Big._o, group: Lohnsteuer2025Big._d },
+Lohnsteuer2025._n = "number";
+Lohnsteuer2025._b = "Big";
+Lohnsteuer2025._i = "input";
+Lohnsteuer2025._o = "output";
+Lohnsteuer2025._s = "STANDARD";
+Lohnsteuer2025._d = "DBA";
+Lohnsteuer2025.typeDirectory = {
+    "af": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "AJAHR": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "ALTER1": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "f": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "JFREIB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JHINZU": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JRE4": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JRE4ENT": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "JVBEZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "KRV": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "KVZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "LZZ": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "LZZFREIB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "LZZHINZU": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "MBV": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PKPV": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PKV": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "PVA": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "PVS": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "PVZ": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "R": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "RE4": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "SONSTB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "SONSTENT": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "STERBE": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "STKL": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "VBEZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBEZM": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBEZS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VBS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "VJAHR": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "ZKF": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._i }, "ZMVB": { type: Lohnsteuer2025._n, direction: Lohnsteuer2025._i }, "BK": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "BKS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "LSTLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "SOLZLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "SOLZS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "STS": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VKVLZZ": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VKVSONST": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._s }, "VFRB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "VFRBS1": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "VFRBS2": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRB": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRBO": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d }, "WVFRBM": { type: Lohnsteuer2025._b, direction: Lohnsteuer2025._o, group: Lohnsteuer2025._d },
 };
 //# sourceMappingURL=Lohnsteuer2025Big.js.map
