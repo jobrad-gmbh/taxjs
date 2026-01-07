@@ -39,7 +39,7 @@ npm install -g  xslt3
 ```
 
 and
-      
+
 ```
 npm run compile-xsl
 ```
@@ -55,7 +55,10 @@ npm install -g  typescript
 1. Download the new XML file from https://www.bmf-steuerrechner.de/ and save it to `build/unpacked/`.
    - Attention: Files should end with Big after the filename, so `Lohnsteuer2024.xml` should be saved as `Lohnsteuer2024Big.xml`, otherwise there may be additional problems during the build, e.g. there will be no minified file generated for them. This is a problem with the implementation in `compress.js`.
 2. Potentially rename the topmost node in the xml file such that it ends with Big. For example in the `Lohnsteuer2025Big.xml` we rename the node from `Lohnsteuer2025` to `Lohnsteuer2025Big`.
-3. Run `npm run build`.
+3. Ensure the XML file has proper formatting:
+   - **UTF-8 BOM**: The file must have a UTF-8 BOM (Byte Order Mark) at the beginning.
+   - **Character escaping**: If using Saxon-JS 2.7.0 or newer, special characters in XML attributes must be properly escaped (e.g., `&` to `&amp;`, `<` to `&lt;`)
+4. Run `npm run build`.
    - Note: If you encounter errors in the .ts files, run `npm run build:ts` separately, fix the errors in the .ts file and then execute the rest of the build commands (`npm run build:declaration && npm run build:native && npm run build:system && npm run build:umd && npm run build:es2015 && npm run build:compress`).
-3. Add all new files to source control and commit.
-4. Update the version. First update in a year increases the major version field to that year (e.g. first new psuedo code for 2024 means that the version would be 2024.0.0), additional pseudo code updates in the same yaar increase the minor version field, patches/bugfixes normally increase the patch version.
+5. Update the version in `package.json`. First update in a year increases the major version field to that year (e.g. first new psuedo code for 2024 means that the version would be 2024.0.0), additional pseudo code updates in the same year increase the minor version field, patches/bugfixes normally increase the patch version. Also update the `main` and `types` fields to point to the new year's files.
+6. Add all new files to source control and commit.
